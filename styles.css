@@ -134,3 +134,126 @@ tbody tr:hover td{background:#eef7ff}
 .presentationExit{background:#ffffff;color:#0a3a82;border-color:#d8e1ee}
 @media(max-width:1100px){.app{padding:8px}.stage{grid-template-columns:250px minmax(360px,1fr) 270px;gap:8px}.panel,.wheelPanel,.history{padding:10px}.title h1{font-size:24px}.title p{display:none}.hadithQuote{min-width:300px;padding:7px 12px}.hadithQuote strong{font-size:13px}.hadithQuote .arabic{font-size:17px}.hadithQuote .tamil{font-size:11px}label{font-size:10px}input{font-size:14px;padding:7px 8px}button{font-size:12px;padding:8px 10px}.wheelArea{width:min(54vh,100%);height:min(54vh,100vw)}table{font-size:11px}th,td{padding:4px}}
 @media(max-width:860px),(orientation:portrait){html,body{overflow:auto}.app{height:auto;min-height:100vh}.stage{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}.title h1{font-size:30px}.title p{display:block}.wheelArea{width:min(620px,92vw);height:min(620px,92vw)}textarea{height:220px;flex:none}.history{overflow:visible}}
+
+/* Responsive fit and wrapping fixes */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+.app{width:100%;min-width:0}
+.title,.hadithQuote,.panel,.wheelPanel,.history,.monthBar>div{min-width:0}
+.title h1,.hadithQuote,.monthBar h2,.monthBar p,.nameTicker,.winnerBox h3,.finalThanks h2,.popup h1,.popup h2,.popup p{overflow-wrap:anywhere}
+.actions>div,.adminTools{min-width:0}
+
+@media(max-width:1280px){
+  .app{max-width:100%;padding:7px}
+  .header{gap:8px}
+  .stage{grid-template-columns:minmax(220px,270px) minmax(330px,1fr) minmax(240px,300px);gap:8px}
+  .panel,.wheelPanel,.history{padding:10px;border-radius:18px}
+  .hadithQuote{min-width:260px;max-width:520px;padding:7px 12px}
+  .wheelArea{width:min(49vh,100%,520px);height:min(49vh,100vw,520px)}
+  .pointer{right:-24px;width:46px;height:34px}
+  .pointer::after{width:34px;height:24px}
+  .centerCap{width:68px;height:68px}
+  .nameTicker{font-size:clamp(16px,1.5vw,20px)}
+  .popup h1{font-size:44px}
+}
+
+@media(max-height:760px) and (min-width:861px){
+  .app{padding:6px;gap:6px}
+  .header{gap:8px}
+  .title h1{font-size:clamp(20px,1.8vw,26px)}
+  .hadithQuote{padding:5px 12px}
+  .hadithQuote strong{font-size:13px}
+  .hadithQuote .arabic{font-size:16px}
+  .hadithQuote .tamil{font-size:11px}
+  .hadithQuote small{font-size:9px}
+  .stage{gap:8px;grid-template-columns:minmax(210px,260px) minmax(310px,1fr) minmax(230px,290px)}
+  .panel,.wheelPanel,.history{padding:8px;border-radius:16px}
+  .settings{gap:6px;margin:6px 0}
+  label{min-height:46px;font-size:9px}
+  input{padding:6px 8px;font-size:13px}
+  textarea{min-height:96px;font-size:11px}
+  .runnerList{height:56px}
+  .actions{gap:6px;margin-top:6px}
+  button{padding:7px 9px;font-size:11px}
+  button.start{font-size:15px;padding:8px 14px}
+  .stats{gap:6px;margin-top:6px}
+  .stats div{padding:6px}
+  .stats strong{font-size:18px}
+  .note{font-size:10px;margin:5px 0}
+  .monthBar{padding:5px 9px;margin-bottom:4px}
+  .monthBar h2{font-size:16px}
+  .monthBar p{font-size:10px}
+  .monthPill{font-size:10px;padding:5px 8px}
+  .wheelArea{width:min(45vh,100%,470px);height:min(45vh,100vw,470px)}
+  .nameTicker{min-height:32px;padding:4px;font-size:16px}
+  .controls{margin-top:4px}
+  .winnerBox{padding:4px}
+  .winnerBox h3{font-size:16px}
+  table{font-size:10px}
+  th,td{padding:3px}
+  .adminTools button{font-size:10px;padding:6px 7px}
+}
+
+@media(max-width:860px),(orientation:portrait){
+  html,body{width:100%;overflow-x:hidden}
+  .app{width:100%;min-height:100dvh;padding:8px;gap:8px}
+  .header{width:100%;gap:8px}
+  .title{width:100%}
+  .title h1{font-size:clamp(22px,7vw,28px);line-height:1.08}
+  .hadithQuote{width:100%;min-width:0;max-width:none;padding:8px 12px;border-radius:14px}
+  .hadithQuote strong{font-size:13px}
+  .hadithQuote .arabic{font-size:clamp(16px,5vw,20px)}
+  .hadithQuote .tamil{font-size:12px;line-height:1.25}
+  .stage,.app.setupHidden .stage{grid-template-columns:minmax(0,1fr);gap:8px;width:100%}
+  .app.setupHidden .panel{display:none}
+  .panel,.wheelPanel,.history{width:100%;max-width:100%;padding:10px;border-radius:16px;overflow:visible}
+  .setupHeader{align-items:flex-start;flex-wrap:wrap}
+  .setupHeader>div{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+  label{white-space:normal;min-height:auto;gap:5px}
+  .settings{grid-template-columns:repeat(2,minmax(0,1fr))}
+  input,textarea,button{max-width:100%}
+  button{white-space:normal;line-height:1.1}
+  .actions,.adminTools{gap:6px}
+  .actions button,.adminTools button{flex:1 1 auto}
+  .history .actions{align-items:stretch}
+  .history .actions>div{display:flex;flex-wrap:wrap;gap:6px;width:100%}
+  .history .actions>div button{flex:1 1 130px}
+  .monthBar{align-items:flex-start;flex-wrap:wrap;padding:8px 10px}
+  .monthBar h2{font-size:17px}
+  .monthBar p{font-size:11px}
+  .monthPill{white-space:normal;font-size:11px;line-height:1.15}
+  .wheelArea{width:min(82vw,430px);height:min(82vw,430px)}
+  .pointer{right:-18px;width:38px;height:28px}
+  .pointer::before{right:4px;width:9px;height:9px}
+  .pointer::after{left:5px;top:5px;width:28px;height:18px}
+  .centerCap{width:60px;height:60px;border-width:5px}
+  .centerCap b{font-size:20px}
+  .nameTicker{font-size:clamp(15px,4.5vw,19px);min-height:38px;padding:7px}
+  .winnerBox h3{font-size:clamp(16px,5vw,20px)}
+  table{font-size:10px}
+  th,td{padding:4px 3px}
+  .summaryOverlay,.dialogOverlay,.overlay{padding:10px}
+  .summaryPanel,.dialogBox,.popup{width:100%;max-width:calc(100vw - 20px);border-radius:16px;padding:14px}
+  .summaryPanel h2{font-size:22px}
+  .dialogBox h2{font-size:20px}
+  .dialogBox p{font-size:15px}
+  .popup p{font-size:20px}
+  .popup h2{font-size:20px}
+  .popup h1{font-size:clamp(30px,10vw,42px)}
+  .finalThanks{padding:18px}
+  .finalThanks h2{font-size:clamp(28px,9vw,44px)}
+}
+
+@media(max-width:520px){
+  .app{padding:6px}
+  .settings{grid-template-columns:minmax(0,1fr)}
+  .setupToggle{font-size:11px;padding:7px 9px}
+  .wheelArea{width:min(78vw,360px);height:min(78vw,360px)}
+  .pointer{right:-14px;width:32px;height:24px}
+  .centerCap{width:54px;height:54px}
+  .centerCap span{font-size:7px}
+  .adminTools button,.actions button{flex-basis:calc(50% - 4px)}
+  .history .actions>div button{flex-basis:calc(50% - 4px)}
+  .runnerList{height:110px}
+  textarea{height:180px}
+  th.sr,td.sr{width:24px;max-width:24px}
+}
