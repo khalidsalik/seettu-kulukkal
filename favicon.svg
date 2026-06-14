@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="18" y1="14" x2="110" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#073b8e"/>
+      <stop offset="0.58" stop-color="#0a84ff"/>
+      <stop offset="1" stop-color="#067647"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="32" y1="20" x2="96" y2="108" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffe08a"/>
+      <stop offset="1" stop-color="#f4b400"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
+  <circle cx="64" cy="64" r="45" fill="#ffffff" opacity="0.96"/>
+  <circle cx="64" cy="64" r="37" fill="url(#gold)"/>
+  <path d="M64 27v74M27 64h74M38 38l52 52M90 38 38 90" stroke="#073b8e" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
+  <circle cx="64" cy="64" r="22" fill="#073b8e"/>
+  <circle cx="64" cy="64" r="15" fill="#ffffff"/>
+  <text x="64" y="70" text-anchor="middle" font-family="Arial, Calibri, sans-serif" font-size="22" font-weight="900" fill="#073b8e">SK</text>
+  <path d="M93 18l4 9 10 3-10 4-4 9-4-9-10-4 10-3 4-9Z" fill="#ffe08a"/>
+</svg>
