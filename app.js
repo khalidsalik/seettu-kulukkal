@@ -1,45 +1,4 @@
-const DEFAULT_NAMES = [
-  "Kamal Salik",
-  "Abdul Rahiman BPT",
-  "Abubakkar Abu Mansoor 1",
-  "Mohammed Sharif",
-  "Jaibunnisa Salik",
-  "Asif Ibrahim",
-  "Mansoor Abdullah 1",
-  "Abubakkar Abu Mansoor 2",
-  "Mohammad Ali BPT",
-  "Rahamathulla Dubai",
-  "Thoufique Salik",
-  "Sirajutheen",
-  "Sabina Abdurrahmaan",
-  "Khalid Salik",
-  "Riyaz Salik",
-  "Khalil Salik",
-  "Rubina",
-  "Kalam Salik",
-  "Jamil Ahmed",
-  "Shajida Rajmuhammad",
-  "Abdussalaam Bhndp",
-  "Abubakkar Abu Mansoor 3",
-  "Parveen Iqbal",
-  "Samsudeen",
-  "Badrun Zakir",
-  "Rashid Sahib",
-  "Abdurrahmaan Bhndp",
-  "Rahamathulla Dubai",
-  "Khalil Salik 2",
-  "Noman Adab Khan",
-  "Shameem Salam",
-  "Rubina",
-  "Kadar Salik",
-  "Afzal Safiya",
-  "Kalam Salik 2",
-  "Sultan",
-  "Shahul Kadarbasha",
-  "Arshad Zarina",
-  "Abida Basha",
-  "Kamal Salik 2"
-];
+const DEFAULT_NAMES = [];
 const STORAGE="family_bc_two_winners_wheel_v5";
 const $=id=>document.getElementById(id);
 const canvas=$("wheel"), ctx=canvas.getContext("2d");
@@ -47,6 +6,7 @@ let state={units:[], wheelOrder:[], winners:[], audit:[], settings:{memberCount:
 let spinning=false, angle=0, velocity=0, raf=null, tickerTimer=null, autoStopTimer=null, selected=null, selectedIndex=-1, displayUnits=null, displayHighlight=-1, lastPegIndex=-1, lastTickAt=0, spinLastTime=0;
 let audioCtx=null, tickOsc=null, tickGain=null, tickTimer=null;
 let pendingSetupMode=null;
+let autoOpenSetupWizard=false;
 
 function months(){const out=[], s=settings(), [year,month]=s.startMonth.split("-").map(Number), start=new Date(year,month-1,1), total=s.monthCount;for(let i=0;i<total;i++){const d=new Date(start.getFullYear(),start.getMonth()+i,1);out.push(d.toLocaleString("en-US",{month:"long",year:"numeric"}));}return out;}
 function todayLabel(){const d=new Date();return `${d.getDate()}-${d.toLocaleString("en-GB",{month:"long"})}-${d.getFullYear()}`;}
@@ -58,6 +18,8 @@ function drawComplete(){return state.winners.length>=targetWinnerCount();}
 function finalMonthCount(){const plan=schedule();return Math.max(1,plan[plan.length-1]||settings().drawPerMonth);}
 function finalAutoReady(){return settings().drawMode==="full"&&state.units.length>0&&!drawComplete()&&state.winners.length>=Math.max(0,state.units.length-finalMonthCount());}
 function normalizeState(){state.settings=state.settings||{};state.settings.memberCount=Math.max(1,Number(state.settings.memberCount)||state.units?.length||40);state.settings.monthCount=Math.max(1,Number(state.settings.monthCount)||20);state.settings.drawPerMonth=Math.max(1,Number(state.settings.drawPerMonth)||2);state.settings.startMonth=/^\d{4}-\d{2}$/.test(state.settings.startMonth||"")?state.settings.startMonth:"2026-07";state.settings.runnerNames=Array.isArray(state.settings.runnerNames)?state.settings.runnerNames:[];state.settings.drawMode=state.settings.drawMode==="specific"?"specific":"full";state.settings.targetDrawCount=Math.max(1,Number(state.settings.targetDrawCount)||Number(state.settings.drawPerMonth)||2);state.units=Array.isArray(state.units)?state.units:[];state.winners=Array.isArray(state.winners)?state.winners:[];state.wheelOrder=Array.isArray(state.wheelOrder)?state.wheelOrder:[];state.audit=Array.isArray(state.audit)?state.audit:[];}
+function isUntouchedDefaultSetup(){return state.winners.length===0&&state.audit.some(entry=>entry?.action==="initial-default-load");}
+function blankSetup(){state={units:[],wheelOrder:[],winners:[],audit:[],settings:{memberCount:40,monthCount:20,drawPerMonth:2,startMonth:"2026-07",runnerNames:[],drawMode:"full",targetDrawCount:2}};}
 function initAudio(){if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();}
 function beep(freq=600,dur=.06,type="square",vol=.05){if(!audioCtx)return; const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type=type;o.frequency.value=freq;g.gain.value=vol;o.connect(g);g.connect(audioCtx.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+dur);o.stop(audioCtx.currentTime+dur);}
 function startSpinSound(){initAudio(); beep(330,.12,"sawtooth",.08); setTimeout(()=>beep(520,.12,"sawtooth",.08),100);}
@@ -76,7 +38,7 @@ function csvCell(value){let s=String(value??"");if(/^[=+\-@]/.test(s))s="'"+s;re
 function notify(message,title="Message"){showDialog({message,title,okText:"OK"});}
 function ask(message,onYes,onNo,title="Confirm"){showDialog({message,title,okText:"OK",cancelText:"Cancel",onYes,onNo});}
 function showDialog({message,title="Message",okText="OK",cancelText="",onYes,onNo}){const overlay=$("dialogOverlay"), cancel=$("dialogCancel"), ok=$("dialogOk");$("dialogTitle").textContent=title;$("dialogMessage").textContent=message;ok.textContent=okText;cancel.textContent=cancelText||"Cancel";cancel.style.display=cancelText?"inline-flex":"none";overlay.classList.add("show");ok.focus();function close(result){overlay.classList.remove("show");ok.onclick=null;cancel.onclick=null;if(result&&onYes)onYes();if(!result&&onNo)onNo();}ok.onclick=()=>close(true);cancel.onclick=()=>close(false);}
-function loadState(){document.title=$("pageTitle").textContent="Family BC 2026 Draw "+todayLabel(); const saved=localStorage.getItem(STORAGE)||localStorage.getItem("family_bc_40_names_wheel_v3"); if(saved){try{state=JSON.parse(saved)}catch{}} normalizeState(); if(!state.units.length){state.units=DEFAULT_NAMES; state.settings.memberCount=DEFAULT_NAMES.length; state.settings.monthCount=20; state.settings.drawPerMonth=2; state.settings.startMonth="2026-07"; state.settings.runnerNames=[]; state.settings.drawMode="full"; state.settings.targetDrawCount=2; state.wheelOrder=secureShuffle(DEFAULT_NAMES.map((name,i)=>({id:i,name}))); state.winners=[]; state.audit=[]; audit("initial-default-load",{members:state.units.length}); save();} $("startMonth").value=settings().startMonth;$("memberCount").value=settings().memberCount;$("monthCount").value=settings().monthCount;$("drawPerMonth").value=settings().drawPerMonth;$("names").value=state.units.join("\n");updateRunnerChoices(settings().runnerNames); render();requestAnimationFrame(()=>drawWheel(displayHighlight));}
+function loadState(){document.title=$("pageTitle").textContent="Family BC 2026 Draw "+todayLabel(); const saved=localStorage.getItem(STORAGE)||localStorage.getItem("family_bc_40_names_wheel_v3"); if(saved){try{state=JSON.parse(saved)}catch{}} normalizeState(); if(!saved||!state.units.length||isUntouchedDefaultSetup()){blankSetup();autoOpenSetupWizard=true;save();} $("startMonth").value=settings().startMonth;$("memberCount").value=settings().memberCount;$("monthCount").value=settings().monthCount;$("drawPerMonth").value=settings().drawPerMonth;$("names").value=state.units.join("\n");updateRunnerChoices(settings().runnerNames); render();requestAnimationFrame(()=>drawWheel(displayHighlight));}
 function setSetupHidden(hidden){document.querySelector(".app").classList.toggle("setupHidden",hidden);$("setupToggle").textContent="Hide Setup ◀";$("setupToggle").title="Hide draw setup";$("setupToggle").setAttribute("aria-expanded",String(!hidden));$("setupShow").setAttribute("aria-expanded",String(!hidden));localStorage.setItem(STORAGE+"_setup_hidden",hidden?"1":"0");requestAnimationFrame(()=>drawWheel(displayHighlight));setTimeout(()=>drawWheel(displayHighlight),430);}
 function setSetupLocked(locked){document.querySelector(".app").classList.toggle("setupLocked",locked);["startMonth","memberCount","monthCount","drawPerMonth","names","load"].forEach(id=>$(id).disabled=locked);document.querySelectorAll("#drawRunners input").forEach(x=>x.disabled=locked);$("lockSetup").textContent=locked?"Unlock Setup":"Lock Setup";localStorage.setItem(STORAGE+"_setup_locked",locked?"1":"0");}
 function parse(){return $("names").value.split(/\n/).map(x=>x.trim()).filter(Boolean);}
@@ -145,4 +107,4 @@ $("start").onclick=start;$("setupToggle").onclick=()=>setSetupHidden(true);$("se
 $("undo").onclick=undoLast;$("backup").onclick=backupState;$("restore").onclick=()=>$("restoreFile").click();$("restoreFile").onchange=e=>{if(e.target.files[0])restoreState(e.target.files[0]);e.target.value="";};$("presentation").onclick=()=>setPresentation(true);$("exitPresentation").onclick=()=>setPresentation(false);$("summary").onclick=showSummary;$("summaryClose").onclick=()=>$("summaryOverlay").classList.remove("show");$("shareAll").onclick=shareAllResults;$("summaryShare").onclick=shareAllResults;
 $("names").addEventListener("input",()=>updateRunnerChoices());
 $("drawPerMonth").addEventListener("input",()=>enforceRunnerLimit());
-loadState();setSetupHidden(localStorage.getItem(STORAGE+"_setup_hidden")==="1");setSetupLocked(localStorage.getItem(STORAGE+"_setup_locked")==="1");setTimeout(()=>drawWheel(displayHighlight),650);
+loadState();setSetupHidden(autoOpenSetupWizard?false:localStorage.getItem(STORAGE+"_setup_hidden")==="1");setSetupLocked(autoOpenSetupWizard?false:localStorage.getItem(STORAGE+"_setup_locked")==="1");if(autoOpenSetupWizard)setTimeout(openWizard,80);setTimeout(()=>drawWheel(displayHighlight),650);
