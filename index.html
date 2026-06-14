@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Family BC Wheel of Fortune Draw</title>
+<style>
+:root{--bg1:#05070d;--bg2:#101828;--gold:#f4c95d;--blue:#0a84ff;--green:#16a765;--red:#e03a4e;--ink:#111827;--panel:#ffffff;--line:#d9e3f0}
+*{box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{margin:0;font-family:Calibri,Arial,sans-serif;color:white;background:radial-gradient(circle at 70% -10%,#1c64f2 0%,transparent 34%),radial-gradient(circle at 15% 95%,#00a6a650 0%,transparent 32%),linear-gradient(135deg,#05070d 0%,#0b1020 45%,#111827 100%);}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,#ffffff10,#00000018);opacity:.65}
+.app{height:100vh;max-width:1500px;margin:auto;padding:8px 10px;display:flex;flex-direction:column;gap:8px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex:0 0 auto}
+.title h1{font-size:clamp(22px,2.2vw,32px);margin:0;font-weight:1000;line-height:1}
+.title p{margin:4px 0 0;color:#d8e8ff;font-weight:700;font-size:13px}
+.badge{display:none}
+.setupToggle,.setupShowTab{background:#ffffff;color:#073b8e;border:2px solid #ffcc33;font-weight:1000;box-shadow:0 12px 28px #0005}
+.setupToggle{border-radius:999px;padding:7px 11px;font-size:12px}
+.setupShowTab{position:absolute;left:0;top:50%;transform:translate(-2px,-50%);z-index:8;border-radius:0 999px 999px 0;padding:12px 10px;display:none;writing-mode:vertical-rl;text-orientation:mixed}
+.hadithQuote{flex:1;min-width:360px;max-width:620px;background:linear-gradient(135deg,#fffaf0,#ffffff);color:#101828;border:2px solid #ffcc33;border-radius:16px;padding:8px 14px;text-align:center;box-shadow:0 14px 34px #0005;position:relative;overflow:hidden}
+.hadithQuote::before,.hadithQuote::after{content:"";position:absolute;top:9px;bottom:9px;width:5px;border-top:2px solid #067647;border-bottom:2px solid #067647}
+.hadithQuote::before{left:8px;border-left:2px solid #067647}.hadithQuote::after{right:8px;border-right:2px solid #067647}
+.hadithQuote strong{display:block;font-size:15px;line-height:1.05;color:#073b8e}
+.hadithQuote .arabic{display:block;margin-top:3px;font-size:20px;line-height:1.1;font-weight:900;color:#067647;direction:rtl}
+.hadithQuote .tamil{display:block;margin-top:2px;font-size:12px;font-weight:900;color:#344054}
+.hadithQuote small{display:block;margin-top:1px;font-size:10px;font-weight:900;color:#8a6200}
+.stage{position:relative;flex:1;min-height:0;display:grid;grid-template-columns:minmax(250px,300px) minmax(420px,1fr) minmax(290px,340px);gap:12px;align-items:stretch;transition:grid-template-columns .38s ease,gap .38s ease}
+.panel,.wheelPanel,.history{background:white;color:var(--ink);border-radius:18px;padding:12px;box-shadow:0 18px 48px #0007;min-height:0}
+.panel{display:flex;flex-direction:column;min-width:0;overflow:hidden;transition:opacity .28s ease,transform .38s ease,padding .38s ease,box-shadow .38s ease}
+textarea{width:100%;flex:1;min-height:140px;border:2px solid #e7edf7;border-radius:14px;padding:10px;font-size:12px;line-height:1.25;outline:none;resize:none;background:#f8fbff}
+label{display:flex;flex-direction:column;justify-content:space-between;gap:4px;min-height:54px;font-size:11px;font-weight:1000;color:#667085;text-transform:uppercase;line-height:1.05;white-space:nowrap}
+input{width:100%;min-width:0;border:2px solid #e7edf7;border-radius:12px;padding:8px 10px;font-size:15px;font-weight:900;color:#071225;background:#f8fbff;outline:none}
+button{border:0;border-radius:12px;padding:10px 12px;font-weight:1000;cursor:pointer;background:var(--blue);color:white;font-size:13px;box-shadow:0 8px 18px #0002;white-space:nowrap}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.secondary{background:#eef4ff;color:#084298}
+button.danger{background:#fff0f0;color:var(--red)}
+button.success{background:#ecfdf3;color:#067647}
+button.start{font-size:18px;background:linear-gradient(135deg,#12b76a,#067647);padding:10px 18px}
+button.stop{font-size:18px;background:linear-gradient(135deg,#ff3b30,#b42318);padding:10px 18px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.stats div{background:#f5f8ff;border-radius:12px;text-align:center;padding:9px}
+.stats strong{display:block;font-size:22px;color:var(--blue);line-height:1}
+.stats span{font-size:10px;font-weight:900;color:#667085}
+.monthBar{display:flex;justify-content:space-between;align-items:center;gap:10px;background:linear-gradient(135deg,#073b8e,#061f4f);color:white;padding:7px 11px;border-radius:13px;margin-bottom:5px}
+.monthBar h2{margin:0;font-size:18px;line-height:1.05}
+.monthBar p{margin:2px 0 0;color:#d8e8ff;font-weight:800;font-size:12px}
+.monthPill{background:#ffcc33;color:#101828;border-radius:999px;padding:6px 10px;font-weight:1000;font-size:12px;white-space:nowrap}
+.wheelPanel{display:flex;flex-direction:column}
+.wheelArea{position:relative;width:min(53vh,100%,610px);height:min(53vh,100vw,610px);aspect-ratio:1;margin:0 auto}
+#wheel{display:block;position:relative;z-index:1;width:100%;height:100%;border-radius:50%;filter:drop-shadow(0 25px 35px #0007)}
+.pointer{position:absolute;top:50%;right:-34px;transform:translateY(-50%);width:58px;height:42px;background:white;clip-path:polygon(0 50%,100% 0,100% 100%);z-index:5;filter:drop-shadow(0 4px 5px #0008);transform-origin:48px 50%}
+.pointer::before{content:"";position:absolute;right:5px;top:50%;transform:translateY(-50%);width:12px;height:12px;border-radius:50%;background:#ffcc33;border:2px solid #050505;z-index:2}
+.pointer::after{content:"";position:absolute;left:7px;top:6px;width:42px;height:30px;background:#050505;clip-path:polygon(0 50%,100% 0,100% 100%)}
+.pointer.tick{animation:pointerTick .08s ease-out}
+.centerCap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:78px;height:78px;border-radius:50%;background:white;border:6px solid #ffcc33;color:#073b8e;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 12px 26px #0006;z-index:4;font-weight:1000}
+.centerCap b{font-size:24px;line-height:1}.centerCap span{font-size:8px}
+.nameTicker{margin:5px auto 0;width:100%;background:#f5f8ff;border:2px solid #e7edf7;color:#073b8e;border-radius:13px;padding:6px;font-size:clamp(17px,1.8vw,22px);font-weight:1000;min-height:40px;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.05}
+.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:5px}
+.winnerBox{margin-top:4px;border:2px solid #ffdf72;border-radius:13px;background:linear-gradient(135deg,#fff8da,#fff);padding:4px;color:#101828;text-align:center}
+.winnerBox small{font-weight:1000;color:#8a6200}.winnerBox h3{font-size:clamp(16px,1.7vw,22px);line-height:1.05;margin:2px 0 0;color:#067647}
+.finalThanks{display:none;flex:1;min-height:0;align-items:center;justify-content:center;text-align:center;padding:26px;border-radius:20px;background:radial-gradient(circle at 50% 20%,#ffffff 0%,#eef7ff 45%,#dff6ec 100%);border:1px solid #ffffff;box-shadow:inset 0 1px 0 #fff,0 20px 55px #10182820}
+.finalThanks h2{margin:0;color:#064e3b;font-size:clamp(34px,4.8vw,64px);line-height:1.02;font-weight:1000;text-shadow:0 2px 0 #fff}
+.wheelPanel.drawComplete .wheelArea,.wheelPanel.drawComplete .nameTicker,.wheelPanel.drawComplete .controls,.wheelPanel.drawComplete .winnerBox{display:none}
+.wheelPanel.drawComplete .finalThanks{display:flex}
+.history{display:flex;flex-direction:column;margin-top:0;overflow:hidden}
+table{width:100%;border-collapse:collapse;margin-top:4px;font-size:11px;table-layout:fixed}th,td{padding:3px 5px;border-bottom:1px solid #e7edf7;text-align:left;vertical-align:top;word-break:break-word;line-height:1.15}th{background:#f5f8ff}
+th.sr,td.sr{width:28px;max-width:28px;text-align:center;padding-left:2px;padding-right:2px}
+.adminTools{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 2px}.adminTools button{font-size:11px;padding:7px 8px}
+.app.setupLocked .panel input,.app.setupLocked .panel textarea{background:#f1f5f9;color:#667085}
+.app.setupLocked #load{opacity:.45;cursor:not-allowed}
+.summaryOverlay{display:none;position:fixed;inset:0;background:#000c;z-index:70;align-items:center;justify-content:center}
+.summaryOverlay.show{display:flex}
+.summaryPanel{background:white;color:#101828;border-radius:24px;border:5px solid #ffcc33;width:min(900px,94vw);max-height:88vh;padding:22px;box-shadow:0 30px 90px #000;display:flex;flex-direction:column;gap:12px}
+.summaryPanel h2{margin:0;color:#073b8e;font-size:30px}.summaryPanel p{margin:0;color:#667085;font-weight:800}.summaryList{overflow:auto;border:1px solid #e7edf7;border-radius:12px}.summaryList table{font-size:13px;margin:0}.summaryPanel .actions{justify-content:flex-end;margin:0}
+.presentationExit{display:none;position:fixed;right:14px;bottom:14px;z-index:80;background:#ffffff;color:#073b8e;border:2px solid #ffcc33}
+.app.presentation{width:100vw;max-width:none;height:100vh;padding:8px;overflow:hidden}.app.presentation .panel,.app.presentation .history,.app.presentation .hadithQuote,.app.presentation .badge,.app.presentation .setupShowTab{display:none}.app.presentation .header{justify-content:center;text-align:center}.app.presentation .stage{grid-template-columns:minmax(0,1fr);place-items:center;width:100%;min-height:0}.app.presentation .wheelPanel{width:min(1180px,100%);height:100%;max-height:100%;margin:0 auto;padding:10px;overflow:hidden}.app.presentation .monthBar{padding:6px 10px;margin-bottom:4px}.app.presentation .wheelArea{width:min(60vh,62vw,640px);height:min(60vh,62vw,640px)}.app.presentation .nameTicker{min-height:36px;padding:5px;margin-top:4px}.app.presentation .controls{margin-top:4px}.app.presentation .winnerBox{margin-top:4px;padding:5px}.app.presentation .presentationExit{display:block}
+.overlay{display:none;position:fixed;inset:0;background:#000b;z-index:50;align-items:center;justify-content:center}
+.overlay.show{display:flex}
+.popup{position:relative;background:white;color:#101828;border-radius:34px;border:6px solid #ffcc33;padding:36px;text-align:center;width:min(760px,92vw);box-shadow:0 30px 90px #000}
+.popup p{font-size:30px;font-weight:1000;color:#8a6200;margin:0}.popup h2{font-size:28px;color:#073b8e;margin:12px 0}.popup h1{font-size:54px;color:#067647;margin:12px 0 26px}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:60}.confetti i{position:absolute;width:10px;height:18px;top:-20px;animation:fall 3s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(760deg)}}@keyframes pointerTick{0%{transform:translateY(-50%) rotate(0deg)}35%{transform:translateY(-50%) rotate(-14deg)}70%{transform:translateY(-50%) rotate(5deg)}100%{transform:translateY(-50%) rotate(0deg)}}
+.note{font-size:12px;color:#667085;line-height:1.35;margin:8px 0}
+.panel h2,.history h2{margin:0 0 6px;font-size:20px}
+.setupHeader{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.setupHeader h2{margin:0}
+.settings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:8px 0}
+.runnerField{grid-column:1/-1}
+.runnerField input{font-size:14px}
+.history .actions{margin-top:0;align-items:center}
+.history .actions h2{margin:0}
+.app.setupHidden .stage{grid-template-columns:0 minmax(520px,1fr) minmax(290px,340px);gap:12px}
+.app.setupHidden .panel{opacity:0;transform:translateX(-18px);padding-left:0;padding-right:0;pointer-events:none;box-shadow:none}
+.app.setupHidden .setupShowTab{display:block}
+.app.presentation.setupHidden .stage{grid-template-columns:minmax(0,1fr);place-items:center}
+.app.presentation.setupHidden .setupShowTab{display:none}
+
+/* Premium tech-product finish */
+.app{position:relative}
+.title h1{font-weight:900;letter-spacing:.1px;text-shadow:0 2px 24px #000b}
+.header{padding:2px 0}
+.hadithQuote{background:#fffffff2;border:1px solid #ffffffcc;border-radius:18px;box-shadow:0 18px 50px #0008,0 0 0 1px #ffffff66;backdrop-filter:blur(18px)}
+.hadithQuote::before,.hadithQuote::after{border-color:#13a36f;opacity:.75}
+.panel,.wheelPanel,.history{background:#f7f9fcf2;border:1px solid #ffffffd9;border-radius:22px;box-shadow:0 28px 80px #0009,0 0 0 1px #ffffff59;backdrop-filter:blur(20px)}
+.wheelPanel{background:linear-gradient(145deg,#fbfdff 0%,#f4f8fc 55%,#edf5f7 100%)}
+.panel h2,.history h2{color:#101828;font-weight:900;letter-spacing:.1px}
+textarea,input{border:1px solid #d0d7e2;background:#ffffff;color:#111827;box-shadow:0 1px 2px #1018280f}
+textarea:focus,input:focus{border-color:#0a84ff;box-shadow:0 0 0 4px #0a84ff24}
+button{position:relative;overflow:hidden;border:1px solid #d5dfeb;box-shadow:0 8px 20px #1018281c;transition:transform .16s ease,box-shadow .16s ease,background .16s ease}
+button:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 12px 28px #1018282b}
+button:active:not(:disabled){transform:translateY(0)}
+button.secondary{background:#ffffff;color:#0a3a82;border-color:#d8e1ee}
+button.danger{background:#fff5f6;color:#b42318;border-color:#ffd3d8}
+button.success{background:#effaf4;color:#067647;border-color:#c7f2d8}
+button.start{background:linear-gradient(135deg,#1bd37a,#058a5a);border-color:#76e7ad;color:white;box-shadow:0 14px 36px #058a5a55}
+.setupToggle,.setupShowTab{background:#ffffff;color:#0a3a82;border-color:#d8e1ee}
+.monthBar{background:linear-gradient(135deg,#0a84ff 0%,#0b4dd8 48%,#111827 100%);border:1px solid #ffffff40;box-shadow:0 14px 32px #0a4dd84d}
+.monthPill{background:#ffffff;color:#0b4dd8;box-shadow:0 5px 14px #0002}
+.nameTicker{background:#ffffff;border-color:#d8e1ee;color:#0a3a82;box-shadow:0 8px 22px #10182814}
+.winnerBox{background:#fffdf8;border-color:#f4c95d;box-shadow:0 10px 26px #10182814}
+table{background:#ffffff;border-radius:12px;overflow:hidden}
+th{background:#eef4fb;color:#0a3a82;border-bottom:1px solid #d8e1ee}
+td{background:#ffffff}
+tbody tr:nth-child(even) td{background:#f7f9fc}
+tbody tr:hover td{background:#eef7ff}
+.adminTools{border-top:1px solid #d8e1ee;border-bottom:1px solid #d8e1ee;padding:6px 0}
+.centerCap{background:#ffffff;box-shadow:0 14px 34px #0008,0 0 0 1px #ffffff}
+.popup,.summaryPanel{background:#fbfdff;border-color:#f4c95d;box-shadow:0 38px 110px #000}
+.presentationExit{background:#ffffff;color:#0a3a82;border-color:#d8e1ee}
+@media(max-width:1100px){.app{padding:8px}.stage{grid-template-columns:250px minmax(360px,1fr) 270px;gap:8px}.panel,.wheelPanel,.history{padding:10px}.title h1{font-size:24px}.title p{display:none}.hadithQuote{min-width:300px;padding:7px 12px}.hadithQuote strong{font-size:13px}.hadithQuote .arabic{font-size:17px}.hadithQuote .tamil{font-size:11px}label{font-size:10px}input{font-size:14px;padding:7px 8px}button{font-size:12px;padding:8px 10px}.wheelArea{width:min(54vh,100%);height:min(54vh,100vw)}table{font-size:11px}th,td{padding:4px}}
+@media(max-width:860px),(orientation:portrait){html,body{overflow:auto}.app{height:auto;min-height:100vh}.stage{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}.title h1{font-size:30px}.title p{display:block}.wheelArea{width:min(620px,92vw);height:min(620px,92vw)}textarea{height:220px;flex:none}.history{overflow:visible}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="title"><h1 id="pageTitle">Family BC 2026 Draw</h1></div>
+    <div class="hadithQuote" aria-label="Hadith about charity">
+      <strong>Charity does not decrease wealth.</strong>
+      <span class="arabic">مَا نَقَصَتْ صَدَقَةٌ مِنْ مَالٍ</span>
+      <span class="tamil">தர்மம் செல்வத்தை குறைக்காது.</span>
+      <small>Sahih Muslim, Hadith 2588</small>
+    </div>
+    <div class="badge" id="status">READY</div>
+  </div>
+  <div class="stage">
+    <button id="setupShow" class="setupShowTab" type="button" title="Show draw setup">Show Setup ▶</button>
+    <div class="panel">
+      <div class="setupHeader"><h2>Draw Setup</h2><div><button id="lockSetup" class="setupToggle" type="button">Lock Setup</button> <button id="setupToggle" class="setupToggle" type="button" title="Hide draw setup" aria-expanded="true">Hide Setup ◀</button></div></div>
+      <p class="note">Set the BC start month, total members, total months, and draw per month. Members must equal months x draw per month.</p>
+      <div class="settings">
+        <label>BC Starts<input id="startMonth" type="month" value="2026-07"></label>
+        <label>Total Members<input id="memberCount" type="number" min="1" max="300" value="40"></label>
+        <label>Total Months<input id="monthCount" type="number" min="1" max="120" value="20"></label>
+        <label>Draw / Month<input id="drawPerMonth" type="number" min="1" max="20" value="2"></label>
+        <label class="runnerField">Draw Runners<input id="drawRunners" type="text" placeholder="Names for 1st month, comma separated"></label>
+      </div>
+      <textarea id="names"></textarea>
+      <div class="actions">
+        <button id="load">Load / Reshuffle Names</button>
+        <button id="reset" class="danger">Reset Draw</button>
+      </div>
+      <div class="stats"><div><strong id="total">0</strong><span>Total</span></div><div><strong id="remaining">0</strong><span>Remaining</span></div><div><strong id="drawn">0</strong><span>Drawn</span></div></div>
+      <p class="note">Sound starts after clicking Bismillaah because browsers allow audio only after user action.</p>
+    </div>
+    <div class="wheelPanel" id="wheelPanel">
+      <div class="monthBar"><div><h2 id="month">July 2026</h2><p id="winnerNo">Winner #1 draw</p></div><div class="monthPill" id="round">Month 1 / 20</div></div>
+      <div class="wheelArea"><canvas id="wheel" width="900" height="900"></canvas><div class="pointer" id="wheelPointer"></div><div class="centerCap"><b>BC</b><span>LUCKY DRAW</span></div></div>
+      <div class="finalThanks"><h2>JazaakAllaah Khairan to All the Members</h2></div>
+      <div class="nameTicker" id="ticker">Click BISMILLAAH to spin the wheel</div>
+      <div class="controls"><button id="start" class="start">Bismillaah</button></div>
+      <div class="winnerBox"><small>Latest Winner</small><h3 id="latest">---</h3></div>
+    </div>
+    <div class="history">
+      <div class="actions" style="justify-content:space-between"><h2>Draw History</h2><div><button id="export" class="secondary">Export CSV</button><button onclick="window.print()" class="secondary">Print / PDF</button></div></div>
+      <div class="adminTools">
+        <button id="undo" class="danger">Undo Last</button>
+        <button id="backup" class="secondary">Backup</button>
+        <button id="restore" class="secondary">Restore</button>
+        <button id="presentation" class="secondary">Presentation</button>
+        <button id="summary" class="success" disabled>Final Summary</button>
+        <button id="shareAll" class="success" disabled>Share All</button>
+      </div>
+      <table><thead id="historyHead"><tr><th class="sr">#</th><th>Month</th><th>Member 1</th><th>Member 2</th></tr></thead><tbody id="history"><tr><td colspan="4">No draw yet.</td></tr></tbody></table>
+    </div>
+  </div>
+  <button id="exitPresentation" class="presentationExit">Exit Presentation</button>
+</div>
+<div class="overlay" id="overlay"><div class="popup"><p>🎉 CONGRATULATIONS 🎉</p><h2 id="popMonth">July 2026 Winner #1</h2><h1 id="popName">Winner</h1><button id="continue">Continue</button></div></div>
+<div class="summaryOverlay" id="summaryOverlay"><div class="summaryPanel"><h2>Final Draw Summary</h2><p id="summaryIntro">All draws are complete.</p><div class="summaryList" id="summaryList"></div><div class="actions"><button id="summaryShare" class="success">Share All</button><button id="summaryClose" class="secondary">Close</button></div></div></div>
+<div class="confetti" id="confetti"></div>
+<input id="restoreFile" type="file" accept="application/json,.json" style="display:none">
+<script>
+const DEFAULT_NAMES = [
+  "Kamal Salik",
+  "Abdul Rahiman BPT",
+  "Abubakkar Abu Mansoor 1",
+  "Mohammed Sharif",
+  "Jaibunnisa Salik",
+  "Asif Ibrahim",
+  "Mansoor Abdullah 1",
+  "Abubakkar Abu Mansoor 2",
+  "Mohammad Ali BPT",
+  "Rahamathulla Dubai",
+  "Thoufique Salik",
+  "Sirajutheen",
+  "Sabina Abdurrahmaan",
+  "Khalid Salik",
+  "Riyaz Salik",
+  "Khalil Salik",
+  "Rubina",
+  "Kalam Salik",
+  "Jamil Ahmed",
+  "Shajida Rajmuhammad",
+  "Abdussalaam Bhndp",
+  "Abubakkar Abu Mansoor 3",
+  "Parveen Iqbal",
+  "Samsudeen",
+  "Badrun Zakir",
+  "Rashid Sahib",
+  "Abdurrahmaan Bhndp",
+  "Rahamathulla Dubai",
+  "Khalil Salik 2",
+  "Noman Adab Khan",
+  "Shameem Salam",
+  "Rubina",
+  "Kadar Salik",
+  "Afzal Safiya",
+  "Kalam Salik 2",
+  "Sultan",
+  "Shahul Kadarbasha",
+  "Arshad Zarina",
+  "Abida Basha",
+  "Kamal Salik 2"
+];
+const STORAGE="family_bc_two_winners_wheel_v5";
+const $=id=>document.getElementById(id);
+const canvas=$("wheel"), ctx=canvas.getContext("2d");
+let state={units:[], wheelOrder:[], winners:[], settings:{memberCount:40, monthCount:20, drawPerMonth:2, startMonth:"2026-07", runnerNames:[]}};
+let spinning=false, angle=0, velocity=0, raf=null, tickerTimer=null, autoStopTimer=null, selected=null, selectedIndex=-1, displayUnits=null, displayHighlight=-1, lastPegIndex=-1, lastTickAt=0;
+let audioCtx=null, tickOsc=null, tickGain=null, tickTimer=null;
+
+function months(){const out=[], s=settings(), [year,month]=s.startMonth.split("-").map(Number), start=new Date(year,month-1,1), total=s.monthCount;for(let i=0;i<total;i++){const d=new Date(start.getFullYear(),start.getMonth()+i,1);out.push(d.toLocaleString("en-US",{month:"long",year:"numeric"}));}return out;}
+function todayLabel(){const d=new Date();return `${d.getDate()}-${d.toLocaleString("en-GB",{month:"long"})}-${d.getFullYear()}`;}
+function settings(){return {memberCount:Math.max(1,Number(state.settings?.memberCount)||40),monthCount:Math.max(1,Number(state.settings?.monthCount)||20),drawPerMonth:Math.max(1,Number(state.settings?.drawPerMonth)||2),startMonth:/^\d{4}-\d{2}$/.test(state.settings?.startMonth||"")?state.settings.startMonth:"2026-07",runnerNames:Array.isArray(state.settings?.runnerNames)?state.settings.runnerNames:[]};}
+function schedule(){return Array.from({length:settings().monthCount},()=>settings().drawPerMonth);}
+function maxWinnersPerMonth(){return Math.max(1,...schedule());}
+function drawComplete(){return state.winners.length>=state.units.length;}
+function finalMonthCount(){const plan=schedule();return Math.max(1,plan[plan.length-1]||settings().drawPerMonth);}
+function finalAutoReady(){return state.units.length>0&&!drawComplete()&&state.winners.length>=Math.max(0,state.units.length-finalMonthCount());}
+function normalizeState(){state.settings=state.settings||{};state.settings.memberCount=Math.max(1,Number(state.settings.memberCount)||state.units?.length||40);state.settings.monthCount=Math.max(1,Number(state.settings.monthCount)||20);state.settings.drawPerMonth=Math.max(1,Number(state.settings.drawPerMonth)||2);state.settings.startMonth=/^\d{4}-\d{2}$/.test(state.settings.startMonth||"")?state.settings.startMonth:"2026-07";state.settings.runnerNames=Array.isArray(state.settings.runnerNames)?state.settings.runnerNames:[];state.units=Array.isArray(state.units)?state.units:[];state.winners=Array.isArray(state.winners)?state.winners:[];state.wheelOrder=Array.isArray(state.wheelOrder)?state.wheelOrder:[];}
+function initAudio(){if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();}
+function beep(freq=600,dur=.06,type="square",vol=.05){if(!audioCtx)return; const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type=type;o.frequency.value=freq;g.gain.value=vol;o.connect(g);g.connect(audioCtx.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+dur);o.stop(audioCtx.currentTime+dur);}
+function startSpinSound(){initAudio(); beep(330,.12,"sawtooth",.08); setTimeout(()=>beep(520,.12,"sawtooth",.08),100);}
+function slowTickSound(){clearInterval(tickTimer);}
+function fanfare(){initAudio(); clearInterval(tickTimer); [523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,.18,"triangle",.09),i*130));}
+function secureShuffle(arr){let a=[...arr];for(let i=a.length-1;i>0;i--){let b=new Uint32Array(1);crypto.getRandomValues(b);let j=b[0]%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function rand(max){const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%max;}
+function save(){localStorage.setItem(STORAGE,JSON.stringify(state));}
+function loadState(){document.title=$("pageTitle").textContent="Family BC 2026 Draw "+todayLabel(); const saved=localStorage.getItem(STORAGE)||localStorage.getItem("family_bc_40_names_wheel_v3"); if(saved){try{state=JSON.parse(saved)}catch{}} normalizeState(); if(!state.units.length){state.units=DEFAULT_NAMES; state.settings.memberCount=DEFAULT_NAMES.length; state.settings.monthCount=20; state.settings.drawPerMonth=2; state.settings.startMonth="2026-07"; state.settings.runnerNames=[]; state.wheelOrder=secureShuffle(DEFAULT_NAMES.map((name,i)=>({id:i,name}))); state.winners=[]; save();} $("startMonth").value=settings().startMonth;$("memberCount").value=settings().memberCount;$("monthCount").value=settings().monthCount;$("drawPerMonth").value=settings().drawPerMonth;$("drawRunners").value=settings().runnerNames.join(", ");$("names").value=state.units.join("\n"); render();requestAnimationFrame(()=>drawWheel(displayHighlight));}
+function setSetupHidden(hidden){document.querySelector(".app").classList.toggle("setupHidden",hidden);$("setupToggle").textContent="Hide Setup ◀";$("setupToggle").title="Hide draw setup";$("setupToggle").setAttribute("aria-expanded",String(!hidden));$("setupShow").setAttribute("aria-expanded",String(!hidden));localStorage.setItem(STORAGE+"_setup_hidden",hidden?"1":"0");requestAnimationFrame(()=>drawWheel(displayHighlight));setTimeout(()=>drawWheel(displayHighlight),430);}
+function setSetupLocked(locked){document.querySelector(".app").classList.toggle("setupLocked",locked);["startMonth","memberCount","monthCount","drawPerMonth","drawRunners","names","load"].forEach(id=>$(id).disabled=locked);$("lockSetup").textContent=locked?"Unlock Setup":"Lock Setup";localStorage.setItem(STORAGE+"_setup_locked",locked?"1":"0");}
+function parse(){return $("names").value.split(/\n/).map(x=>x.trim()).filter(Boolean);}
+function parseRunners(){return $("drawRunners").value.split(/[\n,]+/).map(x=>x.trim()).filter(Boolean);}
+function runnerRecords(units, runnerNames){const used=new Set(), byName=new Map();units.forEach((name,id)=>{const key=name.toLowerCase();if(!byName.has(key))byName.set(key,[]);byName.get(key).push({id,name});});return runnerNames.map((name,i)=>{const list=byName.get(name.toLowerCase())||[], match=list.find(x=>!used.has(x.id));if(!match)return null;used.add(match.id);return {id:match.id,name:match.name,month:months()[0],monthIndex:0,winnerNo:i+1,time:"Assigned as draw runner"};});}
+function drawnIds(){return new Set(state.winners.map(w=>w.id));}
+function remainingWheel(){const d=drawnIds();return state.wheelOrder.filter(x=>!d.has(x.id));}
+function assignFinalMonthIfReady(){if(!finalAutoReady())return false;const ms=months(), lastIndex=settings().monthCount-1, rem=remainingWheel(), existing=state.winners.filter(w=>w.monthIndex===lastIndex).length;rem.forEach((unit,i)=>state.winners.push({id:unit.id,name:unit.name,month:ms[lastIndex],monthIndex:lastIndex,winnerNo:existing+i+1,time:"Assigned automatically as final month remaining member"}));return rem.length>0;}
+function wheelDisplay(){const units=displayUnits||remainingWheel();if(units.length)return units;if(state.wheelOrder?.length)return state.wheelOrder;if(state.units?.length)return state.units.map((name,i)=>({id:i,name}));return [];}
+function pointerIndex(units){const n=Math.max(units.length,1), slice=Math.PI*2/n;return Math.floor((((0-angle)%(Math.PI*2)+Math.PI*2)%(Math.PI*2))/slice);}
+function pegTick(speed=1){const pointer=$("wheelPointer"); pointer.classList.remove("tick"); void pointer.offsetWidth; pointer.classList.add("tick"); beep(760+Math.min(380,speed*120),.012,"square",.032);}
+function syncPegTick(){const units=wheelDisplay(); if(units.length<2)return; const idx=pointerIndex(units), now=performance.now(); if(lastPegIndex<0){lastPegIndex=idx;return} if(idx!==lastPegIndex){const diff=Math.abs(idx-lastPegIndex), step=Math.min(diff,units.length-diff);lastPegIndex=idx;lastTickAt=now;pegTick(step);}}
+function monthIndex(){let drawn=state.winners.length;const plan=schedule();for(let i=0;i<plan.length;i++){if(drawn<plan[i])return i;drawn-=plan[i];}return plan.length-1;}
+function winnerNum(){const mi=monthIndex();return state.winners.filter(w=>w.monthIndex===mi).length+1;}
+function color(i){return ["#0b5ed7","#10a05f","#ffcc33","#df2b2b","#7c3aed","#0891b2","#f97316","#16a34a","#e11d48","#2563eb"][i%10];}
+function short(n){return n.length>24?n.slice(0,22)+"…":n;}
+function drawWheel(highlight=-1){if(!Number.isFinite(angle))angle=0;const units=wheelDisplay(); const n=Math.max(units.length,1); const w=canvas.width,cx=w/2,cy=w/2,r=w/2-18,slice=Math.PI*2/n; ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,w,w); ctx.save(); ctx.translate(cx,cy); ctx.rotate(angle); for(let i=0;i<n;i++){ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r,i*slice,(i+1)*slice);ctx.closePath();ctx.fillStyle=color(i);ctx.fill();ctx.strokeStyle="rgba(255,255,255,.8)";ctx.lineWidth=3;ctx.stroke();ctx.save();ctx.rotate(i*slice+slice/2);ctx.textAlign="right";ctx.fillStyle="#fff";ctx.font=n>60?"900 19px Calibri":n>30?"900 23px Calibri":"900 28px Calibri";ctx.shadowColor="#000";ctx.shadowBlur=5;ctx.fillText(short(units[i]?.name||""),r-22,8);ctx.restore();} ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.lineWidth=12;ctx.strokeStyle="#fff";ctx.stroke();for(let i=0;i<n;i++){const a=i*slice,x=Math.cos(a)*(r-2),y=Math.sin(a)*(r-2);ctx.beginPath();ctx.arc(x,y,n>60?5:7,0,Math.PI*2);ctx.fillStyle="#fff";ctx.fill();ctx.lineWidth=3;ctx.strokeStyle="#050505";ctx.stroke();}ctx.restore();}
+function spinLoop(){angle+=velocity;drawWheel();syncPegTick();raf=requestAnimationFrame(spinLoop);}
+function start(){initAudio(); if(state.units.length!==settings().memberCount){alert("Please load exactly "+settings().memberCount+" names first.");return} if(finalAutoReady()){assignFinalMonthIfReady();save();render();showSummary();return} if(spinning||remainingWheel().length===0)return; spinning=true; selected=null; selectedIndex=-1; displayUnits=null; displayHighlight=-1; lastPegIndex=-1; lastTickAt=0; velocity=1.05+Math.random()*.28; $("status").textContent="SPINNING"; $("start").disabled=true;$("latest").textContent="---";$("ticker").textContent="🎡 SPINNING..."; startSpinSound(); tickerTimer=setInterval(()=>{$("ticker").textContent=["🎡 SPINNING FAST...","✨ GOOD LUCK...","🎯 DRAW IN PROGRESS..."][rand(3)];},180); spinLoop(); autoStopTimer=setTimeout(stop,900);}
+function stop(){if(!spinning)return; clearInterval(tickerTimer); slowTickSound(); $("ticker").textContent="🎡 SLOWING DOWN..."; const rem=remainingWheel(); selectedIndex=rand(rem.length); selected=rem[selectedIndex]; displayUnits=rem; displayHighlight=selectedIndex; cancelAnimationFrame(raf); const full=Math.PI*2, slice=full/rem.length, pointer=0, selectedCenter=selectedIndex*slice+slice/2; const targetBase=pointer-selectedCenter, current=angle, currentMod=((current%full)+full)%full, targetMod=((targetBase%full)+full)%full; const extraTurns=16+rand(6), delta=((targetMod-currentMod+full)%full)+(full*extraTurns), final=current+delta; const startTime=performance.now(), duration=4100+rand(160); lastPegIndex=pointerIndex(rem); function ease(t){return 1-Math.pow(1-t,3)} function slow(now){const t=Math.min(1,(now-startTime)/duration); angle=current+delta*ease(t); drawWheel(selectedIndex); syncPegTick(); if(t>.45&&t<.74)$("ticker").textContent="✨ ALMOST THERE..."; if(t>=.74&&t<1)$("ticker").textContent="🎯 FINAL MOMENTS..."; if(t<1)requestAnimationFrame(slow);else finish();} requestAnimationFrame(slow);}
+function finish(){spinning=false; const m=months()[monthIndex()], wn=winnerNum(); const rec={id:selected.id,name:selected.name,month:m,monthIndex:monthIndex(),winnerNo:wn,time:new Date().toLocaleString()}; state.winners.push(rec); const finalAssigned=assignFinalMonthIfReady(); save(); $("ticker").textContent=finalAssigned?"Final month assigned automatically":selected.name; $("latest").textContent=selected.name; $("status").textContent="WINNER REVEALED"; fanfare(); showPopup(rec); render();}
+function next(){displayUnits=null;displayHighlight=-1;$("ticker").textContent="Click BISMILLAAH to spin the wheel";$("latest").textContent="---";$("start").disabled=drawComplete();$("status").textContent=drawComplete()?"COMPLETE":"READY";drawWheel();}
+function showPopup(rec){$("popMonth").textContent=rec.month+" Member #"+rec.winnerNo;$("popName").textContent=rec.name;$("overlay").classList.add("show");confetti();}
+function confetti(){const box=$("confetti");box.innerHTML="";for(let i=0;i<160;i++){const p=document.createElement("i");p.style.left=Math.random()*100+"vw";p.style.background=color(i);p.style.animationDelay=Math.random()*0.4+"s";p.style.animationDuration=2+Math.random()*2+"s";box.appendChild(p);setTimeout(()=>p.remove(),4500);}}
+function render(){const rem=remainingWheel(), ms=months(), plan=schedule(), mi=drawComplete()?plan.length-1:monthIndex(), wn=winnerNum(), maxW=maxWinnersPerMonth(); $("wheelPanel").classList.toggle("drawComplete",drawComplete());$("total").textContent=state.units.length;$("remaining").textContent=rem.length;$("drawn").textContent=state.winners.length;$("month").textContent=drawComplete()?"Completed":finalAutoReady()?ms[plan.length-1]:ms[mi];$("winnerNo").textContent=drawComplete()?"All members drawn":finalAutoReady()?"Final month will be assigned automatically":"Current Draw: "+ms[mi]+" - Member "+wn+" of "+plan[mi];$("round").textContent=drawComplete()?"Complete":finalAutoReady()?"Final month auto assignment":"Month "+(mi+1)+" / "+settings().monthCount;$("start").disabled=drawComplete()||spinning||finalAutoReady();$("undo").disabled=spinning||state.winners.length===0;$("summary").disabled=!drawComplete();$("shareAll").disabled=!drawComplete();drawWheel(displayHighlight); $("historyHead").innerHTML="<tr><th class=\"sr\">#</th><th>Month</th>"+Array.from({length:maxW},(_,i)=>`<th>Member ${i+1}</th>`).join("")+"</tr>"; const tbody=$("history");tbody.innerHTML="";for(let i=0;i<settings().monthCount;i++){const monthWinners=state.winners.filter(x=>x.monthIndex===i);const cells=Array.from({length:maxW},(_,j)=>`<td>${monthWinners.find(x=>x.winnerNo===j+1)?.name||"---"}</td>`).join("");tbody.innerHTML+=`<tr><td class="sr"><b>${i+1}</b></td><td><b>${ms[i]}</b></td>${cells}</tr>`;} if(!settings().monthCount)tbody.innerHTML=`<tr><td colspan="${maxW+2}">No draw yet.</td></tr>`;}
+function exportCSV(){const ms=months(), maxW=maxWinnersPerMonth();let csv=["#","Month",...Array.from({length:maxW},(_,i)=>"Member "+(i+1))].join(",")+"\n";for(let i=0;i<settings().monthCount;i++){const monthWinners=state.winners.filter(x=>x.monthIndex===i);const names=Array.from({length:maxW},(_,j)=>`"${monthWinners.find(x=>x.winnerNo===j+1)?.name||""}"`).join(",");csv+=`${i+1},"${ms[i]}",${names}\n`;} const blob=new Blob([csv],{type:"text/csv"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="family-bc-wheel-draw-results.csv";a.click();URL.revokeObjectURL(url);}
+function backupState(){const blob=new Blob([JSON.stringify({version:5,savedAt:new Date().toISOString(),state},null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="family-bc-draw-backup.json";a.click();URL.revokeObjectURL(url);}
+function restoreState(file){const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(reader.result), restored=data.state||data; if(!Array.isArray(restored.units)||!Array.isArray(restored.wheelOrder)||!Array.isArray(restored.winners))throw new Error("Invalid backup"); state=restored;normalizeState();save();displayUnits=null;displayHighlight=-1;$("startMonth").value=settings().startMonth;$("memberCount").value=settings().memberCount;$("monthCount").value=settings().monthCount;$("drawPerMonth").value=settings().drawPerMonth;$("drawRunners").value=settings().runnerNames.join(", ");$("names").value=state.units.join("\n");render();alert("Backup restored successfully.");}catch(e){alert("Could not restore this backup file.");}};reader.readAsText(file);}
+function summaryRows(){const ms=months(), maxW=maxWinnersPerMonth();return ms.map((m,i)=>{const monthWinners=state.winners.filter(x=>x.monthIndex===i);return {month:m,names:Array.from({length:maxW},(_,j)=>monthWinners.find(x=>x.winnerNo===j+1)?.name||"")};});}
+function showSummary(){const rows=summaryRows(), maxW=maxWinnersPerMonth();$("summaryIntro").textContent=drawComplete()?"All draws are complete.":"Draw is not complete yet.";let html="<table><thead><tr><th class='sr'>#</th><th>Month</th>"+Array.from({length:maxW},(_,i)=>`<th>Member ${i+1}</th>`).join("")+"</tr></thead><tbody>";rows.forEach((r,i)=>{html+=`<tr><td class="sr"><b>${i+1}</b></td><td><b>${r.month}</b></td>${r.names.map(n=>`<td>${n||"---"}</td>`).join("")}</tr>`});$("summaryList").innerHTML=html+"</tbody></table>";$("summaryOverlay").classList.add("show");}
+function shareAllResults(){if(!drawComplete()){alert("Share All is available after the full draw is complete.");return} const rows=summaryRows();let msg=document.title+"\n\nFinal Draw Results\n";rows.forEach((r,i)=>{msg+=`${i+1}. ${r.month}: ${r.names.filter(Boolean).join(", ")}\n`;});window.open("https://wa.me/?text="+encodeURIComponent(msg),"_blank");}
+function undoLast(){if(spinning||!state.winners.length)return;const autoText="Assigned automatically as final month remaining member";let autoCount=0;while(state.winners.length&&state.winners[state.winners.length-1].time===autoText){state.winners.pop();autoCount++;}const last=state.winners[state.winners.length-1];if(!last){save();render();return}const extra=autoCount?" and remove "+autoCount+" automatic final month member(s)":"";if(!confirm("Undo last member: "+last.name+extra+"?")){assignFinalMonthIfReady();save();render();return}state.winners.pop();displayUnits=null;displayHighlight=-1;save();$("latest").textContent="---";$("ticker").textContent="Click BISMILLAAH to spin the wheel";$("status").textContent="READY";render();}
+function setPresentation(on){document.querySelector(".app").classList.toggle("presentation",on);if(on)document.documentElement.requestFullscreen?.().catch(()=>{});else document.exitFullscreen?.().catch(()=>{});}
+$("load").onclick=()=>{const units=parse(), runnerNames=parseRunners(), startMonth=$("startMonth").value||"2026-07", memberCount=Math.max(1,Number($("memberCount").value)||0), monthCount=Math.max(1,Number($("monthCount").value)||0), drawPerMonth=Math.max(1,Number($("drawPerMonth").value)||0), expected=monthCount*drawPerMonth; if(memberCount!==expected){alert("Total Members must be Total Months x Total Draw Per Month. "+monthCount+" months x "+drawPerMonth+" draw per month needs "+expected+" members.");return} if(units.length!==memberCount){alert("You entered "+units.length+" names. Please enter exactly "+memberCount+" names, or update Total Members.");return} if(runnerNames.length>drawPerMonth){alert("Draw Runners cannot be more than Draw / Month. Please enter up to "+drawPerMonth+" runner name(s).");return} const previousSettings=state.settings; state.settings={memberCount,monthCount,drawPerMonth,startMonth,runnerNames}; const assigned=runnerRecords(units,runnerNames); const missing=runnerNames.filter((_,i)=>!assigned[i]); if(missing.length){state.settings=previousSettings;alert("Draw Runner name(s) not found in member list: "+missing.join(", "));return} displayUnits=null;displayHighlight=-1;state.units=units; state.wheelOrder=secureShuffle(units.map((name,i)=>({id:i,name}))); state.winners=assigned.filter(Boolean); assignFinalMonthIfReady(); save(); render(); alert(memberCount+" names loaded from "+months()[0]+" across "+monthCount+" months. "+state.winners.length+" member(s) assigned automatically for fixed first/last month rules.");};
+$("reset").onclick=()=>{if(confirm("Reset all draw results? Draw runners and final month rules will stay assigned automatically.")){displayUnits=null;displayHighlight=-1;state.winners=runnerRecords(state.units,settings().runnerNames).filter(Boolean);assignFinalMonthIfReady();save();next();render();}};
+$("start").onclick=start;$("setupToggle").onclick=()=>setSetupHidden(true);$("setupShow").onclick=()=>setSetupHidden(false);$("lockSetup").onclick=()=>setSetupLocked(!document.querySelector(".app").classList.contains("setupLocked"));$("continue").onclick=()=>{$("overlay").classList.remove("show");if(drawComplete())showSummary();};$("export").onclick=exportCSV;
+$("undo").onclick=undoLast;$("backup").onclick=backupState;$("restore").onclick=()=>$("restoreFile").click();$("restoreFile").onchange=e=>{if(e.target.files[0])restoreState(e.target.files[0]);e.target.value="";};$("presentation").onclick=()=>setPresentation(true);$("exitPresentation").onclick=()=>setPresentation(false);$("summary").onclick=showSummary;$("summaryClose").onclick=()=>$("summaryOverlay").classList.remove("show");$("shareAll").onclick=shareAllResults;$("summaryShare").onclick=shareAllResults;
+loadState();setSetupHidden(localStorage.getItem(STORAGE+"_setup_hidden")==="1");setSetupLocked(localStorage.getItem(STORAGE+"_setup_locked")==="1");setTimeout(()=>drawWheel(displayHighlight),650);
+</script>
+</body>
+</html>
