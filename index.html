@@ -21,7 +21,7 @@
   <div class="stage">
     <button id="setupShow" class="setupShowTab" type="button" title="Show draw setup">Show Setup ▶</button>
     <div class="panel">
-      <div class="setupHeader"><h2>Draw Setup</h2><div><button id="lockSetup" class="setupToggle" type="button">Lock Setup</button> <button id="setupToggle" class="setupToggle" type="button" title="Hide draw setup" aria-expanded="true">Hide Setup ◀</button></div></div>
+      <div class="setupHeader"><h2>Draw Setup</h2><div><button id="setupWizard" class="setupToggle" type="button">Setup Wizard</button><button id="lockSetup" class="setupToggle" type="button">Lock Setup</button> <button id="setupToggle" class="setupToggle" type="button" title="Hide draw setup" aria-expanded="true">Hide Setup ◀</button></div></div>
       <p class="note">Set the BC start month, total members, total months, and draw per month. Members must equal months x draw per month.</p>
       <div class="settings">
         <label>BC Starts<input id="startMonth" type="month" value="2026-07"></label>
@@ -63,7 +63,42 @@
 </div>
 <div class="overlay" id="overlay"><div class="popup"><p>🎉 CONGRATULATIONS 🎉</p><h2 id="popMonth">July 2026 Winner #1</h2><h1 id="popName">Winner</h1><button id="continue">Continue</button></div></div>
 <div class="summaryOverlay" id="summaryOverlay"><div class="summaryPanel"><h2>Final Draw Summary</h2><p id="summaryIntro">All draws are complete.</p><div class="summaryList" id="summaryList"></div><div class="actions"><button id="summaryShare" class="success">Share All</button><button id="summaryClose" class="secondary">Close</button></div></div></div>
-<div class="dialogOverlay" id="dialogOverlay"><div class="dialogBox"><h2 id="dialogTitle">Message</h2><p id="dialogMessage"></p><div class="actions"><button id="dialogCancel" class="secondary">Cancel</button><button id="dialogOk">OK</button></div></div></div>
+<div class="wizardOverlay" id="wizardOverlay" aria-hidden="true"><div class="wizardPanel" role="dialog" aria-modal="true" aria-labelledby="wizardTitle">
+  <div class="wizardTop"><div><h2 id="wizardTitle">Setup Wizard</h2><p id="wizardStepLabel">Step 1 of 4</p></div><button id="wizardClose" class="secondary" type="button">Close</button></div>
+  <div class="wizardProgress" aria-hidden="true"><i id="wizardProgress"></i></div>
+  <div class="wizardStep" data-step="0">
+    <h3>Draw Details</h3>
+    <div class="wizardMode" role="group" aria-label="Draw setup mode">
+      <label><input id="wizModeFull" name="wizDrawMode" type="radio" value="full" checked><span>Full schedule</span></label>
+      <label><input id="wizModeSpecific" name="wizDrawMode" type="radio" value="specific"><span>Specific month only</span></label>
+    </div>
+    <div class="wizardGrid">
+      <label>BC Starts<input id="wizStartMonth" type="month"></label>
+      <label>Total Months<input id="wizMonthCount" type="number" min="1" max="120"></label>
+      <label>Draw / Month<input id="wizDrawPerMonth" type="number" min="1" max="20"></label>
+      <label>Total Members<input id="wizMemberCount" type="number" min="1" max="300"></label>
+      <label class="wizardSpecificField">Draw Month<input id="wizSpecificMonth" type="month"></label>
+      <label class="wizardSpecificField">Winners Needed<input id="wizSpecificCount" type="number" min="1" max="50"></label>
+    </div>
+    <p class="wizardHint" id="wizExpected">Members must equal months x draw per month.</p>
+  </div>
+  <div class="wizardStep" data-step="1">
+    <h3>Member List</h3>
+    <textarea id="wizNames" spellcheck="false"></textarea>
+    <p class="wizardHint" id="wizNameCount">0 members entered.</p>
+  </div>
+  <div class="wizardStep" data-step="2">
+    <h3>Draw Runners</h3>
+    <p class="wizardHint">Choose up to the draw-per-month count. These members are assigned first.</p>
+    <div id="wizRunners" class="wizardRunnerList" role="group" aria-label="Wizard draw runners"></div>
+  </div>
+  <div class="wizardStep" data-step="3">
+    <h3>Review Setup</h3>
+    <div id="wizReview" class="wizardReview"></div>
+  </div>
+  <p class="wizardError" id="wizardError" role="alert"></p>
+  <div class="wizardActions"><button id="wizardBack" class="secondary" type="button">Back</button><button id="wizardNext" type="button">Next</button></div>
+</div></div><div class="dialogOverlay" id="dialogOverlay"><div class="dialogBox"><h2 id="dialogTitle">Message</h2><p id="dialogMessage"></p><div class="actions"><button id="dialogCancel" class="secondary">Cancel</button><button id="dialogOk">OK</button></div></div></div>
 <div class="confetti" id="confetti"></div>
 <input id="restoreFile" type="file" accept="application/json,.json" style="display:none">
 <script src="app.js"></script>

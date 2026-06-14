@@ -68,6 +68,34 @@ th.sr,td.sr{width:28px;max-width:28px;text-align:center;padding-left:2px;padding
 .summaryOverlay.show{display:flex}
 .summaryPanel{background:white;color:#101828;border-radius:24px;border:5px solid #ffcc33;width:min(900px,94vw);max-height:88vh;padding:22px;box-shadow:0 30px 90px #000;display:flex;flex-direction:column;gap:12px}
 .summaryPanel h2{margin:0;color:#073b8e;font-size:30px}.summaryPanel p{margin:0;color:#667085;font-weight:800}.summaryList{overflow:auto;border:1px solid #e7edf7;border-radius:12px}.summaryList table{font-size:13px;margin:0}.summaryPanel .actions{justify-content:flex-end;margin:0}
+.wizardOverlay{display:none;position:fixed;inset:0;background:#000b;z-index:85;align-items:center;justify-content:center;padding:18px}
+.wizardOverlay.show{display:flex}
+.wizardPanel{width:min(780px,94vw);max-height:90vh;overflow:auto;background:#fbfdff;color:#101828;border-radius:22px;border:1px solid #ffffff;box-shadow:0 34px 110px #000;padding:20px;display:flex;flex-direction:column;gap:14px}
+.wizardTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.wizardTop h2{margin:0;color:#0a3a82;font-size:26px;line-height:1.05}
+.wizardTop p{margin:4px 0 0;color:#667085;font-size:12px;font-weight:900;text-transform:uppercase}
+.wizardProgress{height:8px;background:#e7edf7;border-radius:999px;overflow:hidden}
+.wizardProgress i{display:block;height:100%;width:25%;background:linear-gradient(135deg,#0a84ff,#12b76a);border-radius:999px;transition:width .18s ease}
+.wizardStep{display:none}
+.wizardStep.active{display:block}
+.wizardStep h3{margin:0 0 10px;color:#101828;font-size:20px;line-height:1.1}
+.wizardMode{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:10px}
+.wizardMode label{min-height:auto;display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:8px;border:1px solid #d8e1ee;border-radius:12px;background:#ffffff;padding:9px 10px;color:#101828;text-transform:none;font-size:13px;line-height:1.1;white-space:normal}
+.wizardMode input{width:16px;height:16px;min-width:16px;margin:0;padding:0;accent-color:#0a84ff}
+.wizardMode span{font-weight:1000}
+.wizardGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.wizardHint{margin:10px 0 0;color:#667085;font-size:13px;font-weight:800;line-height:1.35}
+.wizardError{min-height:18px;margin:0;color:#b42318;font-size:13px;font-weight:900;line-height:1.3}
+#wizNames{height:260px;min-height:260px;flex:none;font-size:13px}
+.wizardRunnerList{max-height:280px;overflow:auto;border:1px solid #d0d7e2;border-radius:12px;background:#ffffff;padding:8px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+.wizardRunnerList .runnerOption{min-height:28px}
+.wizardReview{border:1px solid #d8e1ee;border-radius:14px;background:#ffffff;overflow:hidden}
+.wizardReview dl{display:grid;grid-template-columns:minmax(130px,.65fr) minmax(0,1fr);margin:0}
+.wizardReview dt,.wizardReview dd{padding:10px 12px;border-bottom:1px solid #edf2f7;margin:0;line-height:1.25}
+.wizardReview dt{font-size:12px;font-weight:1000;color:#667085;text-transform:uppercase;background:#f7f9fc}
+.wizardReview dd{font-size:14px;font-weight:900;color:#101828;overflow-wrap:anywhere}
+.wizardReview dt:last-of-type,.wizardReview dd:last-of-type{border-bottom:0}
+.wizardActions{display:flex;justify-content:flex-end;gap:8px}
 .dialogOverlay{display:none;position:fixed;inset:0;background:#000b;z-index:90;align-items:center;justify-content:center;padding:18px}
 .dialogOverlay.show{display:flex}
 .dialogBox{width:min(620px,94vw);max-height:86vh;overflow:auto;background:#fbfdff;color:#101828;border-radius:22px;border:1px solid #ffffff;box-shadow:0 34px 110px #000;padding:22px;display:flex;flex-direction:column;gap:14px}
@@ -233,6 +261,18 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   th,td{padding:4px 3px}
   .summaryOverlay,.dialogOverlay,.overlay{padding:10px}
   .summaryPanel,.dialogBox,.popup{width:100%;max-width:calc(100vw - 20px);border-radius:16px;padding:14px}
+  .wizardOverlay{padding:10px;align-items:flex-start}
+  .wizardPanel{width:100%;max-width:calc(100vw - 20px);max-height:calc(100dvh - 20px);border-radius:16px;padding:14px}
+  .wizardTop{gap:8px}
+  .wizardTop h2{font-size:22px}
+  .wizardMode{grid-template-columns:minmax(0,1fr)}
+  .wizardGrid{grid-template-columns:minmax(0,1fr);gap:8px}
+  #wizNames{height:220px;min-height:220px}
+  .wizardRunnerList{grid-template-columns:minmax(0,1fr);max-height:240px}
+  .wizardReview dl{grid-template-columns:minmax(0,1fr)}
+  .wizardReview dt{border-bottom:0;padding-bottom:3px}
+  .wizardReview dd{padding-top:3px}
+  .wizardActions{display:grid;grid-template-columns:1fr 1fr}
   .summaryPanel h2{font-size:22px}
   .dialogBox h2{font-size:20px}
   .dialogBox p{font-size:15px}
