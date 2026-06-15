@@ -1,9 +1,9 @@
 :root{--bg1:#05070d;--bg2:#101828;--gold:#f4c95d;--blue:#0a84ff;--green:#16a765;--red:#e03a4e;--ink:#111827;--panel:#ffffff;--line:#d9e3f0}
 *{box-sizing:border-box}
-html,body{height:100%;overflow:hidden}
+html,body{min-height:100%;overflow-x:hidden;overflow-y:auto}
 body{margin:0;font-family:Calibri,Arial,sans-serif;color:white;background:radial-gradient(circle at 70% -10%,#1c64f2 0%,transparent 34%),radial-gradient(circle at 15% 95%,#00a6a650 0%,transparent 32%),linear-gradient(135deg,#05070d 0%,#0b1020 45%,#111827 100%);}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,#ffffff10,#00000018);opacity:.65}
-.app{height:100vh;max-width:1500px;margin:auto;padding:8px 10px;display:flex;flex-direction:column;gap:8px}
+.app{min-height:100vh;max-width:1500px;margin:auto;padding:8px 10px;display:flex;flex-direction:column;gap:8px}
 .header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex:0 0 auto}
 .title h1{font-size:clamp(22px,2.2vw,32px);margin:0;font-weight:1000;line-height:1}
 .title p{margin:4px 0 0;color:#d8e8ff;font-weight:700;font-size:13px}
@@ -161,6 +161,7 @@ tbody tr:hover td{background:#eef7ff}
 .popup,.summaryPanel{background:#fbfdff;border-color:#f4c95d;box-shadow:0 38px 110px #000}
 .presentationExit{background:#ffffff;color:#0a3a82;border-color:#d8e1ee}
 @media(max-width:1100px){.app{padding:8px}.stage{grid-template-columns:250px minmax(360px,1fr) 270px;gap:8px}.panel,.wheelPanel,.history{padding:10px}.title h1{font-size:24px}.title p{display:none}.hadithQuote{min-width:300px;padding:7px 12px}.hadithQuote strong{font-size:13px}.hadithQuote .arabic{font-size:17px}.hadithQuote .tamil{font-size:11px}label{font-size:10px}input{font-size:14px;padding:7px 8px}button{font-size:12px;padding:8px 10px}.wheelArea{width:min(54vh,100%);height:min(54vh,100vw)}table{font-size:11px}th,td{padding:4px}}
+@media(min-width:861px) and (max-height:760px){.app{height:auto}.stage{flex:0 0 auto;min-height:660px}.panel,.history{overflow:visible}.wheelArea{width:min(52vh,100%,480px);height:min(52vh,100vw,480px)}}
 @media(max-width:860px),(orientation:portrait){html,body{overflow:auto}.app{height:auto;min-height:100vh}.stage{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}.title h1{font-size:30px}.title p{display:block}.wheelArea{width:min(620px,92vw);height:min(620px,92vw)}textarea{height:220px;flex:none}.history{overflow:visible}}
 
 /* Responsive fit and wrapping fixes */
