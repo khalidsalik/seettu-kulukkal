@@ -10,7 +10,8 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;background:li
 .badge{display:none}
 .setupToggle,.setupShowTab{background:#ffffff;color:#073b8e;border:2px solid #ffcc33;font-weight:1000;box-shadow:0 12px 28px #0005}
 .setupToggle{border-radius:999px;padding:7px 11px;font-size:12px}
-.setupShowTab{position:absolute;left:0;top:50%;transform:translate(-2px,-50%);z-index:8;border-radius:0 999px 999px 0;padding:12px 10px;display:none;writing-mode:vertical-rl;text-orientation:mixed}
+.setupShowTab{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:45;border-radius:0 999px 999px 0;padding:12px 10px;display:none;writing-mode:vertical-rl;text-orientation:mixed}
+.setupShowTab:hover:not(:disabled){transform:translateY(-50%)}
 .hadithQuote{flex:1;min-width:360px;max-width:620px;background:linear-gradient(135deg,#fffaf0,#ffffff);color:#101828;border:2px solid #ffcc33;border-radius:16px;padding:8px 14px;text-align:center;box-shadow:0 14px 34px #0005;position:relative;overflow:hidden}
 .hadithQuote::before,.hadithQuote::after{content:"";position:absolute;top:9px;bottom:9px;width:5px;border-top:2px solid #067647;border-bottom:2px solid #067647}
 .hadithQuote::before{left:8px;border-left:2px solid #067647}.hadithQuote::after{right:8px;border-right:2px solid #067647}
@@ -18,9 +19,9 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;background:li
 .hadithQuote .arabic{display:block;margin-top:3px;font-size:20px;line-height:1.1;font-weight:900;color:#067647;direction:rtl}
 .hadithQuote .tamil{display:block;margin-top:2px;font-size:12px;font-weight:900;color:#344054}
 .hadithQuote small{display:block;margin-top:1px;font-size:10px;font-weight:900;color:#8a6200}
-.stage{position:relative;flex:1;min-height:0;display:grid;grid-template-columns:minmax(250px,300px) minmax(0,1fr) minmax(290px,340px);gap:12px;align-items:stretch;transition:grid-template-columns .38s ease,gap .38s ease}
+.stage{position:relative;flex:1;min-height:0;display:grid;grid-template-columns:minmax(250px,300px) minmax(0,1fr) minmax(290px,340px);gap:12px;align-items:stretch;transition:gap .18s ease}
 .panel,.wheelPanel,.history{background:white;color:var(--ink);border-radius:18px;padding:12px;box-shadow:0 18px 48px #0007;min-height:0;min-width:0}
-.panel{display:flex;flex-direction:column;min-width:0;overflow:hidden;transition:opacity .28s ease,transform .38s ease,padding .38s ease,box-shadow .38s ease}
+.panel{display:flex;flex-direction:column;min-width:0;overflow:hidden;transition:opacity .18s ease,transform .18s ease,padding .18s ease,box-shadow .18s ease}
 textarea{width:100%;flex:1;min-height:140px;border:2px solid #e7edf7;border-radius:14px;padding:10px;font-size:12px;line-height:1.25;outline:none;resize:none;background:#f8fbff}
 label{display:flex;flex-direction:column;justify-content:space-between;gap:4px;min-height:54px;font-size:11px;font-weight:1000;color:#667085;text-transform:uppercase;line-height:1.05;white-space:nowrap}
 input{width:100%;min-width:0;border:2px solid #e7edf7;border-radius:12px;padding:8px 10px;font-size:15px;font-weight:900;color:#071225;background:#f8fbff;outline:none}
@@ -108,7 +109,11 @@ th.sr,td.sr{width:28px;max-width:28px;text-align:center;padding-left:2px;padding
 .overlay.show{display:flex}
 .popup{position:relative;background:white;color:#101828;border-radius:34px;border:6px solid #ffcc33;padding:36px;text-align:center;width:min(760px,92vw);box-shadow:0 30px 90px #000}
 .popup p{font-size:30px;font-weight:1000;color:#8a6200;margin:0}.popup h2{font-size:28px;color:#073b8e;margin:12px 0}.popup h1{font-size:54px;color:#067647;margin:12px 0 26px}
+.popup h1#popName{display:flex;flex-wrap:wrap;justify-content:center;gap:.03em;min-height:1.25em;line-height:1.05;overflow:visible;text-shadow:0 2px 0 #ffffff,0 9px 22px #06764745}
+.winnerLetter{display:inline-block;opacity:0;transform:translate(var(--from-x),var(--from-y)) rotate(var(--from-r)) scale(2.15);transform-origin:center;animation:winnerLetterIn .95s cubic-bezier(.16,1.2,.28,1) forwards}
+.winnerSpace{width:.34em}
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:60}.confetti i{position:absolute;width:10px;height:18px;top:-20px;animation:fall 3s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(760deg)}}@keyframes pointerTick{0%{transform:translateY(-50%) rotate(0deg)}35%{transform:translateY(-50%) rotate(-14deg)}70%{transform:translateY(-50%) rotate(5deg)}100%{transform:translateY(-50%) rotate(0deg)}}
+@keyframes winnerLetterIn{0%{opacity:0;filter:blur(5px);transform:translate(var(--from-x),var(--from-y)) rotate(var(--from-r)) scale(2.15)}58%{opacity:1;filter:blur(0);transform:translate(0,0) rotate(-5deg) scale(1.18)}74%{transform:translate(0,-8px) rotate(3deg) scale(.96)}100%{opacity:1;filter:blur(0);transform:translate(0,0) rotate(0) scale(1)}}
 .note{font-size:12px;color:#667085;line-height:1.35;margin:8px 0}
 .panel h2,.history h2{margin:0 0 6px;font-size:20px}
 .setupHeader{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -123,7 +128,7 @@ th.sr,td.sr{width:28px;max-width:28px;text-align:center;padding-left:2px;padding
 .history .actions{margin-top:0;align-items:center}
 .history .actions h2{margin:0}
 .app.setupHidden .stage{grid-template-columns:0 minmax(0,1fr) minmax(290px,340px);gap:12px}
-.app.setupHidden .panel{opacity:0;transform:translateX(-18px);padding-left:0;padding-right:0;pointer-events:none;box-shadow:none}
+.app.setupHidden .panel{opacity:0;transform:none;padding-left:0;padding-right:0;pointer-events:none;box-shadow:none}
 .app.setupHidden .setupShowTab{display:block}
 .app.presentation.setupHidden .stage{grid-template-columns:minmax(0,1.55fr) minmax(320px,.75fr);place-items:stretch}
 .app.presentation.setupHidden .setupShowTab{display:none}
@@ -253,6 +258,8 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   .hadithQuote .arabic{font-size:clamp(16px,5vw,20px)}
   .hadithQuote .tamil{font-size:12px;line-height:1.25}
   .stage,.app.setupHidden .stage{grid-template-columns:minmax(0,1fr);gap:8px;width:100%}
+  .setupShowTab{top:auto;bottom:12px;left:8px;transform:none;writing-mode:horizontal-tb;border-radius:999px;padding:9px 12px}
+  .setupShowTab:hover:not(:disabled){transform:none}
   .app.setupHidden .panel{display:none}
   .panel,.wheelPanel,.history{width:100%;max-width:100%;padding:10px;border-radius:16px;overflow:visible}
   .setupHeader{align-items:flex-start;flex-wrap:wrap}
@@ -309,6 +316,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   .popup p{font-size:20px}
   .popup h2{font-size:20px}
   .popup h1{font-size:clamp(30px,10vw,42px)}
+  .popup h1#popName{gap:.01em}
   .finalThanks{padding:18px}
   .finalThanks h2{font-size:clamp(28px,9vw,44px)}
 }
