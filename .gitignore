@@ -1,0 +1,9 @@
+tools/pydeps/
+demo/announcement-slides/
+demo/announcement-slides.txt
+demo/*.wav
+demo/*.mp3
+demo/*transparent*.png
+demo/*transparent*.webm
+demo/*-tamil-voiceover.webm
+demo/*neural*.webm
