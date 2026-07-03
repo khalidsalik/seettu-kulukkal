@@ -1,0 +1,12 @@
+Seettu Kulukkal App - Offline Use
+
+1. Extract this ZIP file to a normal folder.
+2. Open index.html in Google Chrome or Microsoft Edge.
+3. The app works without internet for setup, draw, presentation mode, history, backup, restore, PDF/image/CSV downloads.
+4. WhatsApp Web sharing needs internet. If offline, download the result image/PDF and share it later.
+5. Do not clear browser data during the draw, because the app stores setup and results in the browser.
+6. Before the real draw, use Backup inside the app and keep the backup file safely.
+
+Recommended:
+- Test the app once before the actual draw.
+- Keep this extracted folder and a backup JSON file on a USB drive.

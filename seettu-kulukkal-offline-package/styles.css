@@ -1,0 +1,337 @@
+:root{--bg1:#05070d;--bg2:#101828;--gold:#f4c95d;--blue:#0a84ff;--green:#16a765;--red:#e03a4e;--ink:#111827;--panel:#ffffff;--line:#d9e3f0}
+*{box-sizing:border-box}
+html,body{min-height:100%;overflow-x:hidden;overflow-y:auto}
+body{margin:0;font-family:Calibri,Arial,sans-serif;color:white;background:radial-gradient(circle at 70% -10%,#1c64f2 0%,transparent 34%),radial-gradient(circle at 15% 95%,#00a6a650 0%,transparent 32%),linear-gradient(135deg,#05070d 0%,#0b1020 45%,#111827 100%);}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,#ffffff10,#00000018);opacity:.65}
+.app{min-height:100vh;max-width:1500px;margin:auto;padding:8px 10px;display:flex;flex-direction:column;gap:8px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex:0 0 auto}
+.title h1{font-size:clamp(22px,2.2vw,32px);margin:0;font-weight:1000;line-height:1}
+.title p{margin:4px 0 0;color:#d8e8ff;font-weight:700;font-size:13px}
+.badge{display:none}
+.setupToggle,.setupShowTab{background:#ffffff;color:#073b8e;border:2px solid #ffcc33;font-weight:1000;box-shadow:0 12px 28px #0005}
+.setupToggle{border-radius:999px;padding:7px 11px;font-size:12px}
+.setupShowTab{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:45;border-radius:0 999px 999px 0;padding:12px 10px;display:none;writing-mode:vertical-rl;text-orientation:mixed}
+.setupShowTab:hover:not(:disabled){transform:translateY(-50%)}
+.hadithQuote{flex:1;min-width:360px;max-width:620px;background:linear-gradient(135deg,#fffaf0,#ffffff);color:#101828;border:2px solid #ffcc33;border-radius:16px;padding:8px 14px;text-align:center;box-shadow:0 14px 34px #0005;position:relative;overflow:hidden}
+.hadithQuote::before,.hadithQuote::after{content:"";position:absolute;top:9px;bottom:9px;width:5px;border-top:2px solid #067647;border-bottom:2px solid #067647}
+.hadithQuote::before{left:8px;border-left:2px solid #067647}.hadithQuote::after{right:8px;border-right:2px solid #067647}
+.hadithQuote strong{display:block;font-size:15px;line-height:1.05;color:#073b8e}
+.hadithQuote .arabic{display:block;margin-top:3px;font-size:20px;line-height:1.1;font-weight:900;color:#067647;direction:rtl}
+.hadithQuote .tamil{display:block;margin-top:2px;font-size:12px;font-weight:900;color:#344054}
+.hadithQuote small{display:block;margin-top:1px;font-size:10px;font-weight:900;color:#8a6200}
+.stage{position:relative;flex:1;min-height:0;display:grid;grid-template-columns:minmax(250px,300px) minmax(0,1fr) minmax(290px,340px);gap:12px;align-items:stretch;transition:gap .18s ease}
+.panel,.wheelPanel,.history{background:white;color:var(--ink);border-radius:18px;padding:12px;box-shadow:0 18px 48px #0007;min-height:0;min-width:0}
+.panel{display:flex;flex-direction:column;min-width:0;overflow:hidden;transition:opacity .18s ease,transform .18s ease,padding .18s ease,box-shadow .18s ease}
+textarea{width:100%;flex:1;min-height:140px;border:2px solid #e7edf7;border-radius:14px;padding:10px;font-size:12px;line-height:1.25;outline:none;resize:none;background:#f8fbff}
+label{display:flex;flex-direction:column;justify-content:space-between;gap:4px;min-height:54px;font-size:11px;font-weight:1000;color:#667085;text-transform:uppercase;line-height:1.05;white-space:nowrap}
+input{width:100%;min-width:0;border:2px solid #e7edf7;border-radius:12px;padding:8px 10px;font-size:15px;font-weight:900;color:#071225;background:#f8fbff;outline:none}
+button{border:0;border-radius:12px;padding:10px 12px;font-weight:1000;cursor:pointer;background:var(--blue);color:white;font-size:13px;box-shadow:0 8px 18px #0002;white-space:nowrap}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.secondary{background:#eef4ff;color:#084298}
+button.danger{background:#fff0f0;color:var(--red)}
+button.success{background:#ecfdf3;color:#067647}
+button.start{font-size:18px;background:linear-gradient(135deg,#12b76a,#067647);padding:10px 18px}
+button.stop{font-size:18px;background:linear-gradient(135deg,#ff3b30,#b42318);padding:10px 18px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.stats div{background:#f5f8ff;border-radius:12px;text-align:center;padding:9px}
+.stats strong{display:block;font-size:22px;color:var(--blue);line-height:1}
+.stats span{font-size:10px;font-weight:900;color:#667085}
+.monthBar{display:flex;justify-content:space-between;align-items:center;gap:10px;background:linear-gradient(135deg,#073b8e,#061f4f);color:white;padding:7px 11px;border-radius:13px;margin-bottom:5px;min-width:0;max-width:100%}
+.monthBar h2{margin:0;font-size:18px;line-height:1.05}
+.monthBar p{margin:2px 0 0;color:#d8e8ff;font-weight:800;font-size:12px}
+.monthPill{background:#ffcc33;color:#101828;border-radius:999px;padding:6px 10px;font-weight:1000;font-size:12px;white-space:nowrap;min-width:0;max-width:45%;overflow:hidden;text-overflow:ellipsis}
+.wheelPanel{display:flex;flex-direction:column;overflow:hidden}
+.wheelArea{position:relative;width:min(53vh,100%,610px);height:min(53vh,100vw,610px);aspect-ratio:1;margin:0 auto}
+#wheel{display:block;position:relative;z-index:1;width:100%;height:100%;border-radius:50%;filter:drop-shadow(0 25px 35px #0007)}
+.pointer{position:absolute;top:50%;right:-34px;transform:translateY(-50%);width:58px;height:42px;background:white;clip-path:polygon(0 50%,100% 0,100% 100%);z-index:5;filter:drop-shadow(0 4px 5px #0008);transform-origin:48px 50%}
+.pointer::before{content:"";position:absolute;right:5px;top:50%;transform:translateY(-50%);width:12px;height:12px;border-radius:50%;background:#ffcc33;border:2px solid #050505;z-index:2}
+.pointer::after{content:"";position:absolute;left:7px;top:6px;width:42px;height:30px;background:#050505;clip-path:polygon(0 50%,100% 0,100% 100%)}
+.pointer.tick{animation:pointerTick .08s ease-out}
+.centerCap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:78px;height:78px;border-radius:50%;background:white;border:6px solid #ffcc33;color:#073b8e;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 12px 26px #0006;z-index:4;font-weight:1000}
+.centerCap b{font-size:24px;line-height:1}.centerCap span{font-size:8px}
+.nameTicker{margin:5px auto 0;width:100%;max-width:100%;background:#f5f8ff;border:2px solid #e7edf7;color:#073b8e;border-radius:13px;padding:6px;font-size:clamp(17px,1.8vw,22px);font-weight:1000;min-height:40px;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.05}
+.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:5px}
+.winnerBox{margin-top:4px;border:2px solid #ffdf72;border-radius:13px;background:linear-gradient(135deg,#fff8da,#fff);padding:4px;color:#101828;text-align:center}
+.winnerBox small{font-weight:1000;color:#8a6200}.winnerBox h3{font-size:clamp(16px,1.7vw,22px);line-height:1.05;margin:2px 0 0;color:#067647}
+.finalThanks{display:none;flex:1;min-height:0;align-items:center;justify-content:center;text-align:center;padding:26px;border-radius:20px;background:radial-gradient(circle at 50% 20%,#ffffff 0%,#eef7ff 45%,#dff6ec 100%);border:1px solid #ffffff;box-shadow:inset 0 1px 0 #fff,0 20px 55px #10182820}
+.finalThanks h2{margin:0;color:#064e3b;font-size:clamp(34px,4.8vw,64px);line-height:1.02;font-weight:1000;text-shadow:0 2px 0 #fff}
+.wheelPanel.drawComplete .wheelArea,.wheelPanel.drawComplete .nameTicker,.wheelPanel.drawComplete .controls,.wheelPanel.drawComplete .winnerBox{display:none}
+.wheelPanel.drawComplete .finalThanks{display:flex}
+.history{display:flex;flex-direction:column;margin-top:0;overflow:hidden}
+table{width:100%;border-collapse:collapse;margin-top:4px;font-size:11px;table-layout:fixed}th,td{padding:3px 5px;border-bottom:1px solid #e7edf7;text-align:left;vertical-align:top;word-break:break-word;line-height:1.15}th{background:#f5f8ff}
+th.sr,td.sr{width:28px;max-width:28px;text-align:center;padding-left:2px;padding-right:2px}
+.adminTools{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 2px}.adminTools button{font-size:11px;padding:7px 8px}
+.app.setupLocked .panel input,.app.setupLocked .panel textarea{background:#f1f5f9;color:#667085}
+.app.setupLocked .runnerList{background:#f1f5f9;color:#667085}
+.app.setupLocked #load{opacity:.45;cursor:not-allowed}
+.summaryOverlay{display:none;position:fixed;inset:0;background:#000c;z-index:70;align-items:center;justify-content:center}
+.summaryOverlay.show{display:flex}
+.summaryPanel{background:white;color:#101828;border-radius:24px;border:5px solid #ffcc33;width:min(900px,94vw);max-height:88vh;padding:22px;box-shadow:0 30px 90px #000;display:flex;flex-direction:column;gap:12px}
+.summaryPanel h2{margin:0;color:#073b8e;font-size:30px}.summaryPanel p{margin:0;color:#667085;font-weight:800}.summaryList{overflow:auto;border:1px solid #e7edf7;border-radius:12px}.summaryList table{font-size:13px;margin:0}.summaryPanel .actions{justify-content:flex-end;margin:0}
+.wizardOverlay{display:none;position:fixed;inset:0;background:#000b;z-index:85;align-items:center;justify-content:center;padding:18px}
+.wizardOverlay.show{display:flex}
+.wizardPanel{width:min(780px,94vw);max-height:90vh;overflow:auto;background:#fbfdff;color:#101828;border-radius:22px;border:1px solid #ffffff;box-shadow:0 34px 110px #000;padding:20px;display:flex;flex-direction:column;gap:14px}
+.wizardTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.wizardTop h2{margin:0;color:#0a3a82;font-size:26px;line-height:1.05}
+.wizardTop p{margin:4px 0 0;color:#667085;font-size:12px;font-weight:900;text-transform:uppercase}
+.wizardProgress{height:8px;background:#e7edf7;border-radius:999px;overflow:hidden}
+.wizardProgress i{display:block;height:100%;width:25%;background:linear-gradient(135deg,#0a84ff,#12b76a);border-radius:999px;transition:width .18s ease}
+.wizardStep{display:none}
+.wizardStep.active{display:block}
+.wizardStep h3{margin:0 0 10px;color:#101828;font-size:20px;line-height:1.1}
+.wizardMode{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:10px}
+.wizardMode label{min-height:auto;display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:8px;border:1px solid #d8e1ee;border-radius:12px;background:#ffffff;padding:9px 10px;color:#101828;text-transform:none;font-size:13px;line-height:1.1;white-space:normal}
+.wizardMode input{width:16px;height:16px;min-width:16px;margin:0;padding:0;accent-color:#0a84ff}
+.wizardMode span{font-weight:1000}
+.wizardGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.wizardHint{margin:10px 0 0;color:#667085;font-size:13px;font-weight:800;line-height:1.35}
+.wizardError{min-height:18px;margin:0;color:#b42318;font-size:13px;font-weight:900;line-height:1.3}
+#wizNames{height:260px;min-height:260px;flex:none;font-size:13px}
+.wizardRunnerList{max-height:280px;overflow:auto;border:1px solid #d0d7e2;border-radius:12px;background:#ffffff;padding:8px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+.wizardRunnerList .runnerOption{min-height:28px}
+.wizardReview{border:1px solid #d8e1ee;border-radius:14px;background:#ffffff;overflow:hidden}
+.wizardReview dl{display:grid;grid-template-columns:minmax(130px,.65fr) minmax(0,1fr);margin:0}
+.wizardReview dt,.wizardReview dd{padding:10px 12px;border-bottom:1px solid #edf2f7;margin:0;line-height:1.25}
+.wizardReview dt{font-size:12px;font-weight:1000;color:#667085;text-transform:uppercase;background:#f7f9fc}
+.wizardReview dd{font-size:14px;font-weight:900;color:#101828;overflow-wrap:anywhere}
+.wizardReview dt:last-of-type,.wizardReview dd:last-of-type{border-bottom:0}
+.wizardActions{display:flex;justify-content:flex-end;gap:8px}
+.dialogOverlay{display:none;position:fixed;inset:0;background:#000b;z-index:90;align-items:center;justify-content:center;padding:18px}
+.dialogOverlay.show{display:flex}
+.dialogBox{width:min(620px,94vw);max-height:86vh;overflow:auto;background:#fbfdff;color:#101828;border-radius:22px;border:1px solid #ffffff;box-shadow:0 34px 110px #000;padding:22px;display:flex;flex-direction:column;gap:14px}
+.dialogBox h2{margin:0;color:#0a3a82;font-size:24px;line-height:1.1;font-weight:1000}
+.dialogBox p{margin:0;color:#344054;font-size:17px;line-height:1.35;font-weight:800;white-space:pre-wrap;overflow-wrap:anywhere}
+.dialogBox .actions{justify-content:flex-end;margin:0}
+.presentationExit{display:none;position:fixed;right:14px;bottom:14px;z-index:80;background:#ffffff;color:#073b8e;border:2px solid #ffcc33}
+.app.presentation{width:100vw;max-width:none;height:100vh;padding:8px;overflow:hidden}.app.presentation .panel,.app.presentation .hadithQuote,.app.presentation .badge,.app.presentation .setupShowTab{display:none}.app.presentation .header{justify-content:center;text-align:center}.app.presentation .stage{grid-template-columns:minmax(0,1.55fr) minmax(320px,.75fr);place-items:stretch;width:100%;min-height:0;gap:10px}.app.presentation .wheelPanel{width:100%;height:100%;max-height:100%;margin:0 auto;padding:10px;overflow:hidden}.app.presentation .history{display:flex;height:100%;max-height:100%;padding:10px;overflow:hidden}.app.presentation .history .actions{gap:8px;flex:0 0 auto}.app.presentation .history .actions>div,.app.presentation .history .adminTools{display:none}.app.presentation .history h2{font-size:24px}.app.presentation .history table{display:block;flex:1 1 auto;min-height:0;overflow:auto;font-size:12px;table-layout:fixed}.app.presentation .history thead,.app.presentation .history tbody,.app.presentation .history tr{display:table;width:100%;table-layout:fixed}.app.presentation .history th,.app.presentation .history td{padding:6px 5px;overflow-wrap:anywhere;word-break:break-word}.app.presentation .history th.sr,.app.presentation .history td.sr{width:24px;max-width:24px}.app.presentation .monthBar{padding:6px 10px;margin-bottom:4px}.app.presentation .wheelArea{width:min(61vh,54vw,640px);height:min(61vh,54vw,640px)}.app.presentation .nameTicker{min-height:36px;padding:5px;margin-top:4px}.app.presentation .controls{margin-top:4px}.app.presentation .winnerBox{margin-top:4px;padding:5px}.app.presentation .presentationExit{display:block}
+.overlay{display:none;position:fixed;inset:0;background:#000b;z-index:50;align-items:center;justify-content:center}
+.overlay.show{display:flex}
+.popup{position:relative;background:white;color:#101828;border-radius:34px;border:6px solid #ffcc33;padding:36px;text-align:center;width:min(760px,92vw);box-shadow:0 30px 90px #000}
+.popup p{font-size:30px;font-weight:1000;color:#8a6200;margin:0}.popup h2{font-size:28px;color:#073b8e;margin:12px 0}.popup h1{font-size:54px;color:#067647;margin:12px 0 26px}
+.popup h1#popName{display:flex;flex-wrap:wrap;justify-content:center;gap:.03em;min-height:1.25em;line-height:1.05;overflow:visible;text-shadow:0 2px 0 #ffffff,0 9px 22px #06764745}
+.winnerLetter{display:inline-block;opacity:0;transform:translate(var(--from-x),var(--from-y)) rotate(var(--from-r)) scale(2.15);transform-origin:center;animation:winnerLetterIn .95s cubic-bezier(.16,1.2,.28,1) forwards}
+.winnerSpace{width:.34em}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:60}.confetti i{position:absolute;width:10px;height:18px;top:-20px;animation:fall 3s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(760deg)}}@keyframes pointerTick{0%{transform:translateY(-50%) rotate(0deg)}35%{transform:translateY(-50%) rotate(-14deg)}70%{transform:translateY(-50%) rotate(5deg)}100%{transform:translateY(-50%) rotate(0deg)}}
+@keyframes winnerLetterIn{0%{opacity:0;filter:blur(5px);transform:translate(var(--from-x),var(--from-y)) rotate(var(--from-r)) scale(2.15)}58%{opacity:1;filter:blur(0);transform:translate(0,0) rotate(-5deg) scale(1.18)}74%{transform:translate(0,-8px) rotate(3deg) scale(.96)}100%{opacity:1;filter:blur(0);transform:translate(0,0) rotate(0) scale(1)}}
+.note{font-size:12px;color:#667085;line-height:1.35;margin:8px 0}
+.panel h2,.history h2{margin:0 0 6px;font-size:20px}
+.setupHeader{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.setupHeader h2{margin:0}
+.settings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:8px 0}
+.runnerField{grid-column:1/-1}
+.runnerList{width:100%;height:82px;overflow:auto;border:1px solid #d0d7e2;border-radius:12px;background:#ffffff;padding:6px;box-shadow:0 1px 2px #1018280f;text-transform:none}
+.runnerOption{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:8px;min-height:24px;padding:3px 5px;border-radius:8px;color:#111827;font-size:12px;font-weight:900;line-height:1.1;text-transform:none;white-space:normal;cursor:pointer}
+.runnerOption:hover{background:#eef7ff}
+.runnerOption input{width:15px;height:15px;min-width:15px;padding:0;margin:0;box-shadow:none;accent-color:#0a84ff}
+.runnerOption span{display:block;flex:1}
+.history .actions{margin-top:0;align-items:center}
+.history .actions h2{margin:0}
+.app.setupHidden .stage{grid-template-columns:0 minmax(0,1fr) minmax(290px,340px);gap:12px}
+.app.setupHidden .panel{opacity:0;transform:none;padding-left:0;padding-right:0;pointer-events:none;box-shadow:none}
+.app.setupHidden .setupShowTab{display:block}
+.app.presentation.setupHidden .stage{grid-template-columns:minmax(0,1.55fr) minmax(320px,.75fr);place-items:stretch}
+.app.presentation.setupHidden .setupShowTab{display:none}
+
+/* Premium tech-product finish */
+.app{position:relative}
+.title h1{font-weight:900;letter-spacing:.1px;text-shadow:0 2px 24px #000b}
+.header{padding:2px 0}
+.hadithQuote{background:#fffffff2;border:1px solid #ffffffcc;border-radius:18px;box-shadow:0 18px 50px #0008,0 0 0 1px #ffffff66;backdrop-filter:blur(18px)}
+.hadithQuote::before,.hadithQuote::after{border-color:#13a36f;opacity:.75}
+.hadithQuote{display:flex;align-items:center;justify-content:center;gap:14px;max-width:none;padding:7px 24px;text-align:left;white-space:nowrap}
+.hadithQuote strong,.hadithQuote .arabic,.hadithQuote .tamil,.hadithQuote small{display:inline;margin:0;line-height:1}
+.hadithQuote strong{font-size:15px}.hadithQuote .arabic{font-size:21px}.hadithQuote .tamil{font-size:13px}.hadithQuote small{font-size:11px}
+.hadithQuote strong::after,.hadithQuote .arabic::after,.hadithQuote .tamil::after{content:"";display:inline-block;width:1px;height:.9em;background:#d0d7e2;margin:0 0 0 14px;vertical-align:-.1em}
+.panel,.wheelPanel,.history{background:#f7f9fcf2;border:1px solid #ffffffd9;border-radius:22px;box-shadow:0 28px 80px #0009,0 0 0 1px #ffffff59;backdrop-filter:blur(20px)}
+.wheelPanel{background:linear-gradient(145deg,#fbfdff 0%,#f4f8fc 55%,#edf5f7 100%)}
+.panel h2,.history h2{color:#101828;font-weight:900;letter-spacing:.1px}
+textarea,input{border:1px solid #d0d7e2;background:#ffffff;color:#111827;box-shadow:0 1px 2px #1018280f}
+textarea:focus,input:focus{border-color:#0a84ff;box-shadow:0 0 0 4px #0a84ff24}
+button{position:relative;overflow:hidden;border:1px solid #d5dfeb;box-shadow:0 8px 20px #1018281c;transition:transform .16s ease,box-shadow .16s ease,background .16s ease}
+button:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 12px 28px #1018282b}
+button:active:not(:disabled){transform:translateY(0)}
+button.secondary{background:#ffffff;color:#0a3a82;border-color:#d8e1ee}
+button.danger{background:#fff5f6;color:#b42318;border-color:#ffd3d8}
+button.success{background:#effaf4;color:#067647;border-color:#c7f2d8}
+button.start{background:linear-gradient(135deg,#1bd37a,#058a5a);border-color:#76e7ad;color:white;box-shadow:0 14px 36px #058a5a55}
+.setupToggle,.setupShowTab{background:#ffffff;color:#0a3a82;border-color:#d8e1ee}
+.monthBar{background:linear-gradient(135deg,#0a84ff 0%,#0b4dd8 48%,#111827 100%);border:1px solid #ffffff40;box-shadow:0 14px 32px #0a4dd84d}
+.monthPill{background:#ffffff;color:#0b4dd8;box-shadow:0 5px 14px #0002}
+.nameTicker{background:#ffffff;border-color:#d8e1ee;color:#0a3a82;box-shadow:0 8px 22px #10182814}
+.winnerBox{background:#fffdf8;border-color:#f4c95d;box-shadow:0 10px 26px #10182814}
+table{background:#ffffff;border-radius:12px;overflow:hidden}
+th{background:#eef4fb;color:#0a3a82;border-bottom:1px solid #d8e1ee}
+td{background:#ffffff}
+tbody tr:nth-child(even) td{background:#f7f9fc}
+tbody tr:hover td{background:#eef7ff}
+.adminTools{border-top:1px solid #d8e1ee;border-bottom:1px solid #d8e1ee;padding:6px 0}
+.centerCap{background:#ffffff;box-shadow:0 14px 34px #0008,0 0 0 1px #ffffff}
+.popup,.summaryPanel{background:#fbfdff;border-color:#f4c95d;box-shadow:0 38px 110px #000}
+.presentationExit{background:#ffffff;color:#0a3a82;border-color:#d8e1ee}
+@media(max-width:1100px){.app{padding:8px}.stage{grid-template-columns:minmax(220px,250px) minmax(0,1fr) minmax(240px,270px);gap:8px}.panel,.wheelPanel,.history{padding:10px}.title h1{font-size:24px}.title p{display:none}.hadithQuote{min-width:300px;padding:7px 12px}.hadithQuote strong{font-size:13px}.hadithQuote .arabic{font-size:17px}.hadithQuote .tamil{font-size:11px}label{font-size:10px}input{font-size:14px;padding:7px 8px}button{font-size:12px;padding:8px 10px}.wheelArea{width:min(54vh,100%);height:min(54vh,100vw)}table{font-size:11px}th,td{padding:4px}}
+@media(min-width:1200px) and (min-height:720px){
+  .app{padding:12px 14px;gap:10px}
+  .stage{grid-template-columns:minmax(280px,340px) minmax(0,1fr) minmax(330px,390px);gap:14px}
+  .panel,.wheelPanel,.history{padding:14px}
+  .wheelPanel{display:grid;grid-template-rows:auto minmax(0,1fr) auto auto auto;align-content:stretch}
+  .wheelArea{width:min(68vh,100%,660px);height:min(68vh,70vw,660px);margin:auto}
+  .monthBar{padding:12px 16px}
+  .nameTicker{min-height:56px;font-size:clamp(18px,1.5vw,26px)}
+  .winnerBox{min-height:96px;display:flex;flex-direction:column;justify-content:center}
+  .finalThanks{padding:14px 16px}
+  textarea{min-height:180px}
+  table{font-size:13px}
+  th,td{padding:7px}
+}
+@media(min-width:861px) and (max-height:760px){.app{height:auto}.stage{flex:0 0 auto;min-height:660px}.panel{overflow:visible}.history{overflow:hidden}.wheelArea{width:min(52vh,100%,480px);height:min(52vh,100vw,480px)}}
+@media(max-width:860px),(orientation:portrait){html,body{overflow:auto}.app{height:auto;min-height:100vh}.stage{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}.title h1{font-size:30px}.title p{display:block}.wheelArea{width:min(620px,92vw);height:min(620px,92vw)}textarea{height:220px;flex:none}.history{overflow:visible}}
+
+/* Responsive fit and wrapping fixes */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+.app{width:100%;min-width:0}
+.title,.hadithQuote,.panel,.wheelPanel,.history,.monthBar>div{min-width:0}
+.title h1,.hadithQuote,.monthBar h2,.monthBar p,.nameTicker,.winnerBox h3,.finalThanks h2,.popup h1,.popup h2,.popup p{overflow-wrap:anywhere}
+.actions>div,.adminTools{min-width:0}
+
+@media(max-width:1280px){
+  .app{max-width:100%;padding:7px}
+  .header{gap:8px}
+  .stage{grid-template-columns:minmax(220px,270px) minmax(0,1fr) minmax(240px,300px);gap:8px}
+  .panel,.wheelPanel,.history{padding:10px;border-radius:18px}
+  .hadithQuote{min-width:260px;max-width:none;padding:7px 12px;gap:10px}
+  .wheelArea{width:min(49vh,100%,520px);height:min(49vh,100vw,520px)}
+  .pointer{right:-24px;width:46px;height:34px}
+  .pointer::after{width:34px;height:24px}
+  .centerCap{width:68px;height:68px}
+  .nameTicker{font-size:clamp(16px,1.5vw,20px)}
+  .popup h1{font-size:44px}
+}
+
+@media(max-height:760px) and (min-width:861px){
+  .app{padding:6px;gap:6px}
+  .header{gap:8px}
+  .title h1{font-size:clamp(20px,1.8vw,26px)}
+  .hadithQuote{padding:5px 12px}
+  .hadithQuote strong{font-size:13px}
+  .hadithQuote .arabic{font-size:16px}
+  .hadithQuote .tamil{font-size:11px}
+  .hadithQuote small{font-size:9px}
+  .stage{gap:8px;grid-template-columns:minmax(210px,260px) minmax(0,1fr) minmax(230px,290px)}
+  .panel,.wheelPanel,.history{padding:8px;border-radius:16px}
+  .settings{gap:6px;margin:6px 0}
+  label{min-height:46px;font-size:9px}
+  input{padding:6px 8px;font-size:13px}
+  textarea{min-height:96px;font-size:11px}
+  .runnerList{height:56px}
+  .actions{gap:6px;margin-top:6px}
+  button{padding:7px 9px;font-size:11px}
+  button.start{font-size:15px;padding:8px 14px}
+  .stats{gap:6px;margin-top:6px}
+  .stats div{padding:6px}
+  .stats strong{font-size:18px}
+  .note{font-size:10px;margin:5px 0}
+  .monthBar{padding:5px 9px;margin-bottom:4px}
+  .monthBar h2{font-size:16px}
+  .monthBar p{font-size:10px}
+  .monthPill{font-size:10px;padding:5px 8px}
+  .wheelArea{width:min(45vh,100%,470px);height:min(45vh,100vw,470px)}
+  .nameTicker{min-height:32px;padding:4px;font-size:16px}
+  .controls{margin-top:4px}
+  .winnerBox{padding:4px}
+  .winnerBox h3{font-size:16px}
+  table{font-size:10px}
+  th,td{padding:3px}
+  .adminTools button{font-size:10px;padding:6px 7px}
+}
+
+@media(max-width:860px),(orientation:portrait){
+  html,body{width:100%;overflow-x:hidden}
+  .app{width:100%;min-height:100dvh;padding:8px;gap:8px}
+  .header{width:100%;gap:8px}
+  .title{width:100%}
+  .title h1{font-size:clamp(22px,7vw,28px);line-height:1.08}
+  .hadithQuote{width:100%;min-width:0;max-width:none;padding:8px 12px;border-radius:14px}
+  .hadithQuote{flex-wrap:wrap;justify-content:flex-start;white-space:normal;text-align:left;gap:5px 10px}
+  .hadithQuote strong::after,.hadithQuote .arabic::after,.hadithQuote .tamil::after{display:none}
+  .hadithQuote strong{font-size:13px}
+  .hadithQuote .arabic{font-size:clamp(16px,5vw,20px)}
+  .hadithQuote .tamil{font-size:12px;line-height:1.25}
+  .stage,.app.setupHidden .stage{grid-template-columns:minmax(0,1fr);gap:8px;width:100%}
+  .setupShowTab{top:auto;bottom:12px;left:8px;transform:none;writing-mode:horizontal-tb;border-radius:999px;padding:9px 12px}
+  .setupShowTab:hover:not(:disabled){transform:none}
+  .app.setupHidden .panel{display:none}
+  .panel,.wheelPanel,.history{width:100%;max-width:100%;padding:10px;border-radius:16px;overflow:visible}
+  .setupHeader{align-items:flex-start;flex-wrap:wrap}
+  .setupHeader>div{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+  label{white-space:normal;min-height:auto;gap:5px}
+  .settings{grid-template-columns:repeat(2,minmax(0,1fr))}
+  input,textarea,button{max-width:100%}
+  button{white-space:normal;line-height:1.1}
+  .actions,.adminTools{gap:6px}
+  .actions button,.adminTools button{flex:1 1 auto}
+  .history .actions{align-items:stretch}
+  .history .actions>div{display:flex;flex-wrap:wrap;gap:6px;width:100%}
+  .history .actions>div button{flex:1 1 130px}
+  .app.presentation{height:auto;min-height:100dvh;overflow:auto}
+  .app.presentation .stage,.app.presentation.setupHidden .stage{grid-template-columns:minmax(0,1fr);place-items:stretch}
+  .app.presentation .history{height:auto;max-height:none;overflow:visible}
+  .app.presentation .history .actions>div,.app.presentation .history .adminTools{display:flex}
+  .app.presentation .history table{display:table;overflow:visible;font-size:10px}
+  .app.presentation .history thead{display:table-header-group;width:auto}
+  .app.presentation .history tbody{display:table-row-group;width:auto}
+  .app.presentation .history tr{display:table-row}
+  .app.presentation .wheelArea{width:min(620px,92vw);height:min(620px,92vw)}
+  .monthBar{align-items:flex-start;flex-wrap:wrap;padding:8px 10px}
+  .monthBar h2{font-size:17px}
+  .monthBar p{font-size:11px}
+  .monthPill{white-space:normal;font-size:11px;line-height:1.15}
+  .wheelArea{width:min(82vw,430px);height:min(82vw,430px)}
+  .pointer{right:-18px;width:38px;height:28px}
+  .pointer::before{right:4px;width:9px;height:9px}
+  .pointer::after{left:5px;top:5px;width:28px;height:18px}
+  .centerCap{width:60px;height:60px;border-width:5px}
+  .centerCap b{font-size:20px}
+  .nameTicker{font-size:clamp(15px,4.5vw,19px);min-height:38px;padding:7px}
+  .winnerBox h3{font-size:clamp(16px,5vw,20px)}
+  table{font-size:10px}
+  th,td{padding:4px 3px}
+  .summaryOverlay,.dialogOverlay,.overlay{padding:10px}
+  .summaryPanel,.dialogBox,.popup{width:100%;max-width:calc(100vw - 20px);border-radius:16px;padding:14px}
+  .wizardOverlay{padding:10px;align-items:flex-start}
+  .wizardPanel{width:100%;max-width:calc(100vw - 20px);max-height:calc(100dvh - 20px);border-radius:16px;padding:14px}
+  .wizardTop{gap:8px}
+  .wizardTop h2{font-size:22px}
+  .wizardMode{grid-template-columns:minmax(0,1fr)}
+  .wizardGrid{grid-template-columns:minmax(0,1fr);gap:8px}
+  #wizNames{height:220px;min-height:220px}
+  .wizardRunnerList{grid-template-columns:minmax(0,1fr);max-height:240px}
+  .wizardReview dl{grid-template-columns:minmax(0,1fr)}
+  .wizardReview dt{border-bottom:0;padding-bottom:3px}
+  .wizardReview dd{padding-top:3px}
+  .wizardActions{display:grid;grid-template-columns:1fr 1fr}
+  .summaryPanel h2{font-size:22px}
+  .dialogBox h2{font-size:20px}
+  .dialogBox p{font-size:15px}
+  .popup p{font-size:20px}
+  .popup h2{font-size:20px}
+  .popup h1{font-size:clamp(30px,10vw,42px)}
+  .popup h1#popName{gap:.01em}
+  .finalThanks{padding:18px}
+  .finalThanks h2{font-size:clamp(28px,9vw,44px)}
+}
+
+@media(max-width:520px){
+  .app{padding:6px}
+  .settings{grid-template-columns:minmax(0,1fr)}
+  .setupToggle{font-size:11px;padding:7px 9px}
+  .wheelArea{width:min(78vw,360px);height:min(78vw,360px)}
+  .pointer{right:-14px;width:32px;height:24px}
+  .centerCap{width:54px;height:54px}
+  .centerCap span{font-size:7px}
+  .adminTools button,.actions button{flex-basis:calc(50% - 4px)}
+  .history .actions>div button{flex-basis:calc(50% - 4px)}
+  .runnerList{height:110px}
+  textarea{height:180px}
+  th.sr,td.sr{width:24px;max-width:24px}
+}

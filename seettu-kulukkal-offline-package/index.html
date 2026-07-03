@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Seettu Kulukkal App</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="apple-touch-icon" href="favicon.svg" />
+<meta name="theme-color" content="#073b8e" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="title"><h1 id="pageTitle">Seettu Kulukkal App</h1></div>
+    <div class="hadithQuote" aria-label="Hadith about charity">
+      <strong>Charity does not decrease wealth.</strong>
+      <span class="arabic">مَا نَقَصَتْ صَدَقَةٌ مِنْ مَالٍ</span>
+      <span class="tamil">தர்மம் செல்வத்தைக் குறைக்காது.</span>
+      <small>Sahih Muslim, Hadith 2588</small>
+    </div>
+    <div class="badge" id="status">READY</div>
+  </div>
+  <div class="stage">
+    <button id="setupShow" class="setupShowTab" type="button" title="Show draw setup">Show Setup ▶</button>
+    <div class="panel">
+      <div class="setupHeader"><h2>Draw Setup</h2><div><button id="setupWizard" class="setupToggle" type="button">Setup Wizard</button><button id="lockSetup" class="setupToggle" type="button">Lock Setup</button> <button id="setupToggle" class="setupToggle" type="button" title="Hide draw setup" aria-expanded="true">Hide Setup ◀</button></div></div>
+      <p class="note">Set the BC start month, total members, total months, and draw per month. Members must equal months x draw per month.</p>
+      <div class="settings">
+        <label>BC Starts<input id="startMonth" type="month" value="2026-07"></label>
+        <label>Total Members<input id="memberCount" type="number" min="1" max="300" value="40"></label>
+        <label>Total Months<input id="monthCount" type="number" min="1" max="120" value="20"></label>
+        <label>Draw / Month<input id="drawPerMonth" type="number" min="1" max="20" value="2"></label>
+        <label class="runnerField">Draw Runners<div id="drawRunners" class="runnerList" role="group" aria-label="Draw runners"></div></label>
+      </div>
+      <textarea id="names"></textarea>
+      <div class="actions">
+        <button id="load">Load / Reshuffle Names</button>
+        <button id="reset" class="danger">Reset Draw</button>
+      </div>
+      <div class="stats"><div><strong id="total">0</strong><span>Total</span></div><div><strong id="remaining">0</strong><span>Remaining</span></div><div><strong id="drawn">0</strong><span>Drawn</span></div></div>
+      <p class="note">Sound starts after clicking Bismillaah because browsers allow audio only after user action.</p>
+    </div>
+    <div class="wheelPanel" id="wheelPanel">
+      <div class="monthBar"><div><h2 id="month">July 2026</h2><p id="winnerNo">Winner #1 draw</p></div><div class="monthPill" id="round">Month 1 / 20</div></div>
+      <div class="wheelArea"><canvas id="wheel" width="900" height="900"></canvas><div class="pointer" id="wheelPointer"></div><div class="centerCap"><b>BC</b><span>LUCKY DRAW</span></div></div>
+      <div class="finalThanks"><h2>JazaakAllaah Khairan to All the Members</h2></div>
+      <div class="nameTicker" id="ticker">Click BISMILLAAH to spin the wheel</div>
+      <div class="controls"><button id="start" class="start">Bismillaah</button></div>
+      <div class="winnerBox"><small>Latest Winner</small><h3 id="latest">---</h3></div>
+    </div>
+    <div class="history">
+      <div class="actions" style="justify-content:space-between"><h2>Draw History</h2><div><button id="export" class="secondary">Export CSV</button><button id="print" class="secondary">Print / PDF</button></div></div>
+      <div class="adminTools">
+        <button id="undo" class="danger">Undo Last</button>
+        <button id="backup" class="secondary">Backup</button>
+        <button id="restore" class="secondary">Restore</button>
+        <button id="presentation" class="secondary">Presentation</button>
+        <button id="summary" class="success" disabled>Final Summary</button>
+        <button id="shareAll" class="success" disabled>Share Image</button>
+      </div>
+      <table><thead id="historyHead"><tr><th class="sr">#</th><th>Month</th><th>Member 1</th><th>Member 2</th></tr></thead><tbody id="history"><tr><td colspan="4">No draw yet.</td></tr></tbody></table>
+    </div>
+  </div>
+  <button id="exitPresentation" class="presentationExit">Exit Presentation</button>
+</div>
+<div class="overlay" id="overlay"><div class="popup"><p>🎉 CONGRATULATIONS 🎉</p><h2 id="popMonth">July 2026 Winner #1</h2><h1 id="popName">Winner</h1><button id="continue">Continue</button></div></div>
+<div class="summaryOverlay" id="summaryOverlay"><div class="summaryPanel"><h2>Final Draw Summary</h2><p id="summaryIntro">All draws are complete.</p><div class="summaryList" id="summaryList"></div><div class="actions"><button id="summaryPdf" class="secondary">Download PDF</button><button id="summaryImage" class="secondary">Download Image</button><button id="summaryCsv" class="secondary">Download CSV</button><button id="summaryShare" class="success">Share Image</button><button id="summaryClose" class="secondary">Close</button></div></div></div>
+<div class="wizardOverlay" id="wizardOverlay" aria-hidden="true"><div class="wizardPanel" role="dialog" aria-modal="true" aria-labelledby="wizardTitle">
+  <div class="wizardTop"><div><h2 id="wizardTitle">Setup Wizard</h2><p id="wizardStepLabel">Step 1 of 4</p></div><button id="wizardClose" class="secondary" type="button">Close</button></div>
+  <div class="wizardProgress" aria-hidden="true"><i id="wizardProgress"></i></div>
+  <div class="wizardStep" data-step="0">
+    <h3>Draw Details</h3>
+    <div class="wizardMode" role="group" aria-label="Draw setup mode">
+      <label><input id="wizModeFull" name="wizDrawMode" type="radio" value="full" checked><span>Full schedule</span></label>
+      <label><input id="wizModeSpecific" name="wizDrawMode" type="radio" value="specific"><span>Specific month only</span></label>
+    </div>
+    <div class="wizardGrid">
+      <label>BC Starts<input id="wizStartMonth" type="month"></label>
+      <label>Total Months<input id="wizMonthCount" type="number" min="1" max="120"></label>
+      <label>Draw / Month<input id="wizDrawPerMonth" type="number" min="1" max="20"></label>
+      <label>Total Members<input id="wizMemberCount" type="number" min="1" max="300"></label>
+      <label class="wizardSpecificField">Draw Month<input id="wizSpecificMonth" type="month"></label>
+      <label class="wizardSpecificField">Winners Needed<input id="wizSpecificCount" type="number" min="1" max="50"></label>
+    </div>
+    <p class="wizardHint" id="wizExpected">Members must equal months x draw per month.</p>
+  </div>
+  <div class="wizardStep" data-step="1">
+    <h3>Member List</h3>
+    <textarea id="wizNames" spellcheck="false"></textarea>
+    <p class="wizardHint" id="wizNameCount">0 members entered.</p>
+  </div>
+  <div class="wizardStep" data-step="2">
+    <h3>Draw Runners</h3>
+    <p class="wizardHint">Choose up to the draw-per-month count. These members are assigned first.</p>
+    <div id="wizRunners" class="wizardRunnerList" role="group" aria-label="Wizard draw runners"></div>
+  </div>
+  <div class="wizardStep" data-step="3">
+    <h3>Review Setup</h3>
+    <div id="wizReview" class="wizardReview"></div>
+  </div>
+  <p class="wizardError" id="wizardError" role="alert"></p>
+  <div class="wizardActions"><button id="wizardBack" class="secondary" type="button">Back</button><button id="wizardNext" type="button">Next</button></div>
+</div></div><div class="dialogOverlay" id="dialogOverlay"><div class="dialogBox"><h2 id="dialogTitle">Message</h2><p id="dialogMessage"></p><div class="actions"><button id="dialogCancel" class="secondary">Cancel</button><button id="dialogOk">OK</button></div></div></div>
+<div class="confetti" id="confetti"></div>
+<input id="restoreFile" type="file" accept="application/json,.json" style="display:none">
+<script src="app.js"></script>
+</body>
+</html>
